@@ -45,7 +45,7 @@
                     </a>
                     <div class="relative">
                         <div class="h-8 w-8 rounded-full overflow-hidden cursor-pointer" id="profile-menu-button">
-                            <img src="https://avatar.iran.liara.run/public/boy" alt="Profile" class="w-full h-full object-cover"/>
+                            <img src="{{Storage::url($user -> image)}}" alt="Profile" class="w-full h-full object-cover"/>
                         </div>
                         
                         <!-- Dropdown Menu -->
