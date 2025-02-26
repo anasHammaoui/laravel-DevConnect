@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Développeur</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- En-tête de profil -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden mb-6">
+            <div class="md:flex">
+                <div class="md:flex-shrink-0 bg-gradient-to-r from-blue-500 to-indigo-600 w-full md:w-48 h-48 flex items-center justify-center">
+                    <img class="h-32 w-32 rounded-full border-4 border-white object-cover" src="https://avatar.iran.liara.run/public/boy" alt="Photo de profil">
+                </div>
+                <div class="p-8 w-full">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-800">Thomas Dubois</h1>
+                            <p class="text-gray-600">Développeur Full Stack Senior</p>
+                            <p class="text-gray-500 mt-1">Paris, France</p>
+                            <p class="text-sm text-gray-500 mt-1">Membre depuis Janvier 2022</p>
+                        </div>
+                        <div>
+                            <button id="connection-request-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-300 flex items-center">
+                                <i class="fas fa-user-plus mr-2"></i> Se connecter
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-gray-700">
+                            Développeur passionné avec 8 ans d'expérience dans le développement d'applications web et mobiles. Spécialiste JavaScript et architectures cloud.
+                        </p>
+                    </div>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                            <i class="fab fa-github mr-1"></i> GitHub
+                        </span>
+                        <span class="inline-flex items-center px-3 py-1 bg-orange-100 text-orange-800 text-xs rounded-full">
+                            <i class="fab fa-gitlab mr-1"></i> GitLab
+                        </span>
+                        <span class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                            <i class="fab fa-linkedin mr-1"></i> LinkedIn
+                        </span>
+                        <span class="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-800 text-xs rounded-full">
+                            <i class="fas fa-globe mr-1"></i> Portfolio
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation des sections -->
+        <div class="mb-6 flex overflow-x-auto">
+            <nav class="flex space-x-4 px-1">
+                <button class="tab-btn active text-blue-600 border-b-2 border-blue-600 px-3 py-2 font-medium text-sm" data-tab="competences">Compétences & Langages</button>
+                <button class="tab-btn text-gray-600 hover:text-blue-600 px-3 py-2 font-medium text-sm" data-tab="projets">Projets</button>
+                <button class="tab-btn text-gray-600 hover:text-blue-600 px-3 py-2 font-medium text-sm" data-tab="certifications">Certifications</button>
+                <button class="tab-btn text-gray-600 hover:text-blue-600 px-3 py-2 font-medium text-sm" data-tab="portfolio">Portfolio GitHub/GitLab</button>
+                <button class="tab-btn text-gray-600 hover:text-blue-600 px-3 py-2 font-medium text-sm" data-tab="connexions">Connexions</button>
+            </nav>
+        </div>
+
+        <!-- Contenu principal -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Sections du profil (partie principale) -->
+            <div class="lg:col-span-2">
+                <!-- Section Compétences -->
+                <div id="competences" class="tab-content active">
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden mb-6">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h2 class="text-xl font-semibold text-gray-800">Compétences Techniques</h2>
+                        </div>
+                        <div class="p-6">
+                            <div class="mb-6">
+                                <h3 class="text-md font-medium text-gray-700 mb-2">Langages de Programmation</h3>
+                                <div class="flex flex-wrap gap-2">
+                                    <div class="skill-bar w-full md:w-5/12 pr-3 mb-4">
+                                        <div class="flex justify-between mb-1">
+                                            <span class="text-sm font-medium text-gray-700">JavaScript</span>
+                                            <span class="text-sm font-medium text-gray-700">95%</span>
+                                        </div>
+                                        <div class="h-2 bg-gray-200 rounded-full">
+                                            <div class="h-2 bg-blue-600 rounded-full" style="width: 95%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="skill-bar w-full md:w-5/12 pr-3 mb-4">
+                                        <div class="flex justify-between mb-1">
+                                            <span class="text-sm font-medium text-gray-700">TypeScript</span>
+                                            <span class="text-sm font-medium text-gray-700">90%</span>
+                                        </div>
+                                        <div class="h-2 bg-gray-200 rounded-full">
+                                            <div class="h-2 bg-blue-600 rounded-full" style="width: 90%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="skill-bar w-full md:w-5/12 pr-3 mb-4">
+                                        <div class="flex justify-between mb-1">
+                                            <span class="text-sm font-medium text-gray-700">Python</span>
+                                            <span class="text-sm font-medium text-gray-700">85%</span>
+                                        </div>
+                                        <div class="h-2 bg-gray-200 rounded-full">
+                                            <div class="h-2 bg-blue-600 rounded-full" style="width: 85%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="skill-bar w-full md:w-5/12 pr-3 mb-4">
+                                        <div class="flex justify-between mb-1">
+                                            <span class="text-sm font-medium text-gray-700">PHP</span>
+                                            <span class="text-sm font-medium text-gray-700">80%</span>
+                                        </div>
+                                        <div class="h-2 bg-gray-200 rounded-full">
+                                            <div class="h-2 bg-blue-600 rounded-full" style="width: 80%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="skill-bar w-full md:w-5/12 pr-3 mb-4">
+                                        <div class="flex justify-between mb-1">
+                                            <span class="text-sm font-medium text-gray-700">Go</span>
+                                            <span class="text-sm font-medium text-gray-700">70%</span>
+                                        </div>
+                                        <div class="h-2 bg-gray-200 rounded-full">
+                                            <div class="h-2 bg-blue-600 rounded-full" style="width: 70%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <h3 class="text-md font-medium text-gray-700 mb-2">Frameworks & Bibliothèques</h3>
+                                <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                    <div class="bg-gray-100 rounded-lg p-3 text-center">
+                                        <i class="fab fa-react text-blue-500 text-xl mb-1"></i>
+                                        <p class="text-sm font-medium">React</p>
+                                    </div>
+                                    <div class="bg-gray-100 rounded-lg p-3 text-center">
+                                        <i class="fab fa-vuejs text-green-500 text-xl mb-1"></i>
+                                        <p class="text-sm font-medium">Vue.js</p>
+                                    </div>
+                                    <div class="bg-gray-100 rounded-lg p-3 text-center">
+                                        <i class="fab fa-angular text-red-500 text-xl mb-1"></i>
+                                        <p class="text-sm font-medium">Angular</p>
+                                    </div>
+                                    <div class="bg-gray-100 rounded-lg p-3 text-center">
+                                        <i class="fab fa-node-js text-green-600 text-xl mb-1"></i>
+                                        <p class="text-sm font-medium">Node.js</p>
+                                    </div>
+                                    <div class="bg-gray-100 rounded-lg p-3 text-center">
+                                        <i class="fab fa-laravel text-red-600 text-xl mb-1"></i>
+                                        <p class="text-sm font-medium">Laravel</p>
+                                    </div>
+                                    <div class="bg-gray-100 rounded-lg p-3 text-center">
+                                        <i class="fas fa-fire text-orange-500 text-xl mb-1"></i>
+                                        <p class="text-sm font-medium">Express</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-md font-medium text-gray-700 mb-2">Autres Compétences</h3>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">Docker</span>
+                                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">Kubernetes</span>
+                                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">AWS</span>
+                                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">GCP</span>
+                                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">CI/CD</span>
+                                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">MongoDB</span>
+                                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">PostgreSQL</span>
+                                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">Redis</span>
+                                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">GraphQL</span>
+                                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">REST APIs</span>
+                                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">TDD</span>
+                                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">Agile/Scrum</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section Projets -->
+                <div id="projets" class="tab-content hidden">
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden mb-6">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h2 class="text-xl font-semibold text-gray-800">Projets Réalisés</h2>
+                        </div>
+                        <div class="p-6">
+                            <div class="space-y-6">
+                                <div class="border-b border-gray-200 pb-6">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h3 class="text-lg font-medium text-gray-800">Plateforme E-learning</h3>
+                                            <p class="text-sm text-gray-600 mt-1">Janvier 2023 - Juin 2023</p>
+                                        </div>
+                                        <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Terminé</span>
+                                    </div>
+                                    <p class="mt-2 text-gray-700">
+                                        Développement d'une plateforme e-learning complète avec des fonctionnalités de cours en ligne, quiz interactifs et système de progression.
+                                    </p>
+                                    <div class="mt-3 flex flex-wrap gap-2">
+                                        <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded text-xs font-medium">React</span>
+                                        <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded text-xs font-medium">Node.js</span>
+                                        <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded text-xs font-medium">MongoDB</span>
+                                        <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded text-xs font-medium">AWS</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="border-b border-gray-200 pb-6">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h3 class="text-lg font-medium text-gray-800">Application de Gestion de Projets</h3>
+                                            <p class="text-sm text-gray-600 mt-1">Mai 2022 - Décembre 2022</p>
+                                        </div>
+                                        <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Terminé</span>
+                                    </div>
+                                    <p class="mt-2 text-gray-700">
+                                        Création d'un outil interne de gestion de projets avec suivi des tâches, reporting et tableaux de bord analytiques.
+                                    </p>
+                                    <div class="mt-3 flex flex-wrap gap-2">
+                                        <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded text-xs font-medium">Vue.js</span>
+                                        <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded text-xs font-medium">Express</span>
+                                        <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded text-xs font-medium">PostgreSQL</span>
+                                        <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded text-xs font-medium">Docker</span>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h3 class="text-lg font-medium text-gray-800">API de Recommandation Produits</h3>
+                                            <p class="text-sm text-gray-600 mt-1">Février 2022 - Avril 2022</p>
+                                        </div>
+                                        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">En maintenance</span>
+                                    </div>
+                                    <p class="mt-2 text-gray-700">
+                                        Développement d'une API de recommandation de produits basée sur l'apprentissage automatique pour une plateforme e-commerce.
+                                    </p>
+                                    <div class="mt-3 flex flex-wrap gap-2">
+                                        <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded text-xs font-medium">Python</span>
+                                        <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded text-xs font-medium">FastAPI</span>
+                                        <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded text-xs font-medium">TensorFlow</span>
+                                        <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded text-xs font-medium">GCP</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section Certifications -->
+                <div id="certifications" class="tab-content hidden">
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden mb-6">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h2 class="text-xl font-semibold text-gray-800">Certifications</h2>
+                        </div>
+                        <div class="p-6">
+                            <div class="space-y-4">
+                                <div class="flex items-start p-4 border border-gray-200 rounded-lg">
+                                    <div class="flex-shrink-0 mr-4">
+                                        <img src="/api/placeholder/40/40" alt="AWS" class="w-10 h-10 object-contain"/>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-md font-medium text-gray-800">AWS Certified Solutions Architect</h3>
+                                        <p class="text-sm text-gray-600 mt-1">Amazon Web Services</p>
+                                        <p class="text-sm text-gray-600 mt-1">Obtenue en Octobre 2023 • Expire en Octobre 2026</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start p-4 border border-gray-200 rounded-lg">
+                                    <div class="flex-shrink-0 mr-4">
+                                        <img src="/api/placeholder/40/40" alt="Google" class="w-10 h-10 object-contain"/>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-md font-medium text-gray-800">Google Professional Cloud Developer</h3>
+                                        <p class="text-sm text-gray-600 mt-1">Google Cloud</p>
+                                        <p class="text-sm text-gray-600 mt-1">Obtenue en Mai 2023 • Expire en Mai 2025</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start p-4 border border-gray-200 rounded-lg">
+                                    <div class="flex-shrink-0 mr-4">
+                                        <img src="/api/placeholder/40/40" alt="MongoDB" class="w-10 h-10 object-contain"/>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-md font-medium text-gray-800">MongoDB Certified Developer</h3>
+                                        <p class="text-sm text-gray-600 mt-1">MongoDB Inc.</p>
+                                        <p class="text-sm text-gray-600 mt-1">Obtenue en Janvier 2022 • Pas d'expiration</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start p-4 border border-gray-200 rounded-lg">
+                                    <div class="flex-shrink-0 mr-4">
+                                        <img src="/api/placeholder/40/40" alt="Kubernetes" class="w-10 h-10 object-contain"/>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-md font-medium text-gray-800">Certified Kubernetes Administrator (CKA)</h3>
+                                        <p class="text-sm text-gray-600 mt-1">Cloud Native Computing Foundation</p>
+                                        <p class="text-sm text-gray-600 mt-1">Obtenue en Août 2022 • Expire en Août 2025</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section Portfolio GitHub/GitLab -->
+                <div id="portfolio" class="tab-content hidden">
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden mb-6">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h2 class="text-xl font-semibold text-gray-800">Portfolio GitHub & GitLab</h2>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="flex items-center">
+                                    <i class="fab fa-github text-2xl mr-2"></i>
+                                    <div>
+                                        <h3 class="font-medium text-gray-800">thomasdubois</h3>
+                                        <p class="text-sm text-gray-600">145 contributions cette année</p>
+                                    </div>
+                                </div>
+                                <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Voir le profil</a>
+                            </div>
+                            
+                            <div class="space-y-4 mb-8">
+                                <div class="border border-gray-200 rounded-lg p-4">
+                                    <div class="flex justify-between items-start">
+                                        <h3 class="font-medium text-blue-600">react-performance-tools</h3>
+                                        <div class="flex items-center text-sm text-gray-600">
+                                            <span class="flex items-center mr-3">
+                                                <i class="far fa-star mr-1"></i> 126
+                                            </span>
+                                            <span class="flex items-center">
+                                                <i class="fas fa-code-branch mr-1"></i> 42
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <p class="text-gray-700 mt-1 text-sm">Bibliothèque d'utilitaires pour optimiser les performances des applications React</p>
+                                    <div class="mt-2 flex items-center text-xs text-gray-500">
+                                        <span class="mr-2 inline-block w-3 h-3 rounded-full bg-yellow-400"></span>
+                                        JavaScript
+                                        <span class="mx-2">•</span>
+                                        Mis à jour il y a 2 semaines
+                                    </div>
+                                </div>
+                                
+                                <div class="border border-gray-200 rounded-lg p-4">
+                                    <div class="flex justify-between items-start">
+                                        <h3 class="font-medium text-blue-600">serverless-api-starter</h3>
+                                        <div class="flex items-center text-sm text-gray-600">
+                                            <span class="flex items-center mr-3">
+                                                <i class="far fa-star mr-1"></i> 89
+                                            </span>
+                                            <span class="flex items-center">
+                                                <i class="fas fa-code-branch mr-1"></i> 24
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <p class="text-gray-700 mt-1 text-sm">Template pour démarrer rapidement une API serverless avec AWS Lambda et API Gateway</p>
+                                    <div class="mt-2 flex items-center text-xs text-gray-500">
+                                        <span class="mr-2 inline-block w-3 h-3 rounded-full bg-blue-400"></span>
+                                        TypeScript
+                                        <span class="mx-2">•</span>
+                                        Mis à jour il y a 1 mois
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="flex items-center">
+                                    <i class="fab fa-gitlab text-2xl mr-2 text-orange-600"></i>
+                                    <div>
+                                        <h3 class="font-medium text-gray-800">t.dubois</h3>
+                                        <p class="text-sm text-gray-600">32 projets actifs</p>
+                                    </div>
+                                </div>
+                                <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Voir le profil</a>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <div class="border border-gray-200 rounded-lg p-4">
+                                    <div class="flex justify-between items-start">
+                                        <h3 class="font-medium text-blue-600">docker-compose-templates</h3>
+                                        <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Public</span>
+                                    </div>
+                                    <p class="text-gray-700 mt-1 text-sm">Collection de templates docker-compose pour différentes stacks de développement</p>
+                                    <div class="mt-2 flex items-center text-xs text-gray-500">
+                                        <span class="mr-2 inline-block w-3 h-3 rounded-full bg-blue-500"></span>
+                                        Docker
+                                        <span class="mx-2">•</span>
+                                        Mis à jour il y a 3 semaines
+                                    </div>
+                                </div>
+                                
+                                <div class="border border-gray-200 rounded-lg p-4">
+                                    <div class="flex justify-between items-start">
+                                        <h3 class="font-medium text-blue-600">ml-pipeline-toolkit</h3>
+                                        <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Public</span>
+                                    </div>
+                                    <p class="text-gray-700 mt-1 text-sm">Boîte à outils pour créer des pipelines ML avec Kubeflow</p>
+                                    <div class="mt-2 flex items-center text-xs text-gray-500">
+                                        <span class="mr-2 inline-block w-3 h-3 rounded-full bg-green-500"></span>
+                                        Python
+                                        <span class="mx-2">•</span>
+                                        Mis à jour il y a 2 mois
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            </div>
+            </div>
+            </body>
+            </html>
