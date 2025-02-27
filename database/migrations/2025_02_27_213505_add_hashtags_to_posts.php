@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('post_hashtags', function (Blueprint $table) {
-            $table->id();
-            $table -> foreignId("post_id");
-            $table->foreignId("hashtag_id");
+        Schema::table('posts', function (Blueprint $table) {
+            $table -> text("hashtags") -> nullable();
         });
     }
 
@@ -23,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::table('posts', function (Blueprint $table) {
+            //
+        });
     }
 };

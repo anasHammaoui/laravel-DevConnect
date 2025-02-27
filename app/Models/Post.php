@@ -11,17 +11,14 @@ class Post extends Model
     use HasFactory;
     protected $fillable = [
         'user_id',
-        'content',
-        'image',
-        'code',
-        'link',
-        'likes',
         'shares',
+        'post_type',
+        'content_type',
+        'content',
+        'shares',
+        'hashtags'
     ];
     public function user(){
         return $this -> belongsTo(User::class);
-    }
-    public function hashtags(){
-        return $this -> belongsToMany(Hashtag::class, "post_hashtags");
     }
 }

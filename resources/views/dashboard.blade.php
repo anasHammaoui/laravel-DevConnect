@@ -4,7 +4,7 @@
 
 @section('content')
     <!-- Main Content -->
-    <div class="max-w-7xl mx-auto px-4 pb-10">
+    <div class="max-w-7xl mx-auto px-4 pb-10" x-data="{ showModal: false, contentType: '' }">
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <!-- Left Sidebar -->
             <div class="space-y-6">
@@ -56,29 +56,73 @@
                 <div class="bg-white rounded-xl shadow-sm p-4">
                     <div class="flex items-center space-x-4">
                         <img src="{{ Storage::url(auth()-> user() -> image) }}" alt="User" class="w-12 h-12 rounded-full"/>
-                        <button class="bg-gray-100 hover:bg-gray-200 text-gray-500 text-left rounded-lg px-4 py-3 flex-grow transition-colors duration-200">
+                        <button @click="showModal = true" class="bg-gray-100 hover:bg-gray-200 text-gray-500 text-left rounded-lg px-4 py-3 flex-grow transition-colors duration-200">
                             Share your knowledge or ask a question...
                         </button>
                     </div>
                     <div class="flex justify-between mt-4 pt-4 border-t">
-                        <button class="flex items-center space-x-2 text-gray-500 hover:bg-gray-100 px-4 py-2 rounded-lg transition-colors duration-200">
+                        <button @click="showModal = true; contentType = 'code'" class="flex items-center space-x-2 text-gray-500 hover:bg-gray-100 px-4 py-2 rounded-lg transition-colors duration-200">
                             <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
                             </svg>
                             <span>Code</span>
                         </button>
-                        <button class="flex items-center space-x-2 text-gray-500 hover:bg-gray-100 px-4 py-2 rounded-lg transition-colors duration-200">
+                        <button @click="showModal = true; contentType = 'image'" class="flex items-center space-x-2 text-gray-500 hover:bg-gray-100 px-4 py-2 rounded-lg transition-colors duration-200">
                             <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                             </svg>
                             <span>Image</span>
                         </button>
-                        <button class="flex items-center space-x-2 text-gray-500 hover:bg-gray-100 px-4 py-2 rounded-lg transition-colors duration-200">
+                        <button @click="showModal = true; contentType = 'link'" class="flex items-center space-x-2 text-gray-500 hover:bg-gray-100 px-4 py-2 rounded-lg transition-colors duration-200">
                             <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
                             </svg>
                             <span>Link</span>
                         </button>
+                    </div>
+                </div>
+
+                <!-- Modal -->
+                <div x-show="showModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-xl font-semibold">Create Post</h3>
+                            <button @click="showModal = false" class="text-gray-500 hover:text-gray-700">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <form action="/posts" method="POST" enctype="multipart/form-data" class="mt-4">
+                            @csrf
+                            <div class="mb-4">
+                                <textarea name="content" placeholder="Write your post..." class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"></textarea>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-700">Add Content:</label>
+                                <div class="flex space-x-4 mt-2">
+                                    <template x-if="contentType === 'image'">
+                                        <div>
+                                            <input type="file" name="image" class="hidden" id="image-upload">
+                                            <label for="image-upload" class="cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-500 px-4 py-2 rounded-lg transition-colors duration-200">Image</label>
+                                        </div>
+                                    </template>
+                                    <template x-if="contentType === 'link'">
+                                        <input type="text" name="link" placeholder="Add a link..." class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200">
+                                    </template>
+                                    <template x-if="contentType === 'code'" >
+                                        <textarea name="code" placeholder="Add code snippet..." class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"></textarea>
+                                    </template>
+                                </div>
+                                <!-- hashtags -->
+                                <div class="my-4">
+                                <textarea name="hashtags" placeholder="tags separeted by commas: PHP, JS, MYSQL..." class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"></textarea>
+                            </div>
+                            </div>
+                            <div class="flex justify-end">
+                                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors duration-200">Post</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
 
@@ -104,14 +148,22 @@
                         <div class="mt-4">
                             <p class="text-gray-700">{{ $post -> content }}</p>
                             
+                            @if ($post -> post_type === 'image')
+                                <img src="{{ Storage::url($post -> content_type) }}" alt="Post Image" class="w-full h-auto max-h-96 object-cover rounded-lg mt-4">
+                            @elseif ($post -> post_type === 'code')
                             <div class="mt-4 bg-gray-900 rounded-lg p-4 font-mono text-sm text-gray-200 overflow-x-auto">
                                 <pre><code>{{$post -> code}}</code></pre>
                             </div>
+                            @endif
             
                             <div class="mt-4 flex flex-wrap gap-2">
-                               @foreach ($post -> hashtags as $tag )
-                               <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">{{ $tag -> name }}</span>
-                               @endforeach
+                                @forelse (explode(',', trim($post->hashtags)) as $tag)
+                                    @if(!empty($tag))
+                                        <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">{{ $tag }}</span>
+                                    @endif
+                                @empty
+                                    <!-- No tags to display -->
+                                @endforelse
                             </div>
             
                             <div class="mt-4 flex items-center justify-between border-t pt-4">

@@ -15,6 +15,7 @@ return new class extends Migration
             $table -> dropColumn('image');
             $table -> dropColumn('code');
             $table -> dropColumn('link');
+            $table -> dropColumn("likes");
             $table -> enum('post_type',['image','code','link']) -> nullable();
             $table -> text("content_type") -> nullable();
         });
@@ -29,6 +30,7 @@ return new class extends Migration
             $table->string('image');
             $table->string('code');
             $table->string('link');
+            $table->integer('likes');
         });
     }
 };

@@ -34,8 +34,11 @@ class ProfileController extends Controller
             'email' => 'required',
         ]);
         if ($request -> hasFile('profile_image')){
-            $imagepath = $request->file('profile_image') ? $request->file('profile_image')->store('profile-images', 'public') : null;
-            Storage::disc('public') -> delete($user-> image);
+            $imagepath = $request->file('profile_image') ? $request->file('profile_image')->store('Z
+            -images', 'public') : null;
+            if ($user -> image !== null){
+                Storage::disk('public')->delete($user->image);
+            }
         } else {
             $imagepath = $user -> image;
         }
