@@ -9,6 +9,7 @@
     @yield('styles')
 </head>
 <body class="bg-gray-50">
+    
     <!-- Navigation -->
     <nav class="fixed top-0 w-full bg-gray-900 text-white z-50">
         <div class="max-w-7xl mx-auto px-4">

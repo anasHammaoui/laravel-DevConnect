@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth as Auth;
 
 class PostController extends Controller
 {
     public function index(){
-        $allPosts = Post::get();
+        $allPosts = Post::latest() -> paginate(5) ;
         // dd($allPosts);
         return view("dashboard", ["allPosts"=>$allPosts]);
     }
@@ -47,5 +48,22 @@ class PostController extends Controller
             'hashtags' => $request -> hashtags,
         ]);
         return redirect()->route("dashboard");
+    }
+    public function update(Request $request,$id){
+        $validation = $request -> validate([
+            "content" => "required|min:5",
+        ]);
+        $post = Post::find($id);
+        $post->content = $request -> content;
+        $post->save();
+        return redirect()->route("dashboard");
+    }
+    public function destroy($id){
+        $post = Post::find($id);
+        if ($post -> post_type === 'image' && $post -> content_type !== null){
+            Storage::disk('public') -> delete($post -> content_type);
+        }
+        $post -> delete();
+        return redirect() -> back() -> with('post_deleted','Post deleted successfully');
     }
 }
