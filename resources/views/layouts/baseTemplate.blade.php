@@ -13,7 +13,7 @@
         <div class="max-w-7xl mx-auto px-4">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center space-x-4">
-                    <div class="text-2xl font-bold text-blue-400">&lt;DevConnect/&gt;</div>
+                    <div class="text-2xl font-bold text-blue-400"><a href="/" class="decoration-none">&lt;DevConnect/&gt;</a></div>
                     <div class="relative">
                         <input type="text" 
                                placeholder="Search developers, posts, or #tags" 
@@ -45,7 +45,7 @@
                     </a>
                     <div class="relative">
                         <div class="h-8 w-8 rounded-full overflow-hidden cursor-pointer" id="profile-menu-button">
-                            <img src="{{Storage::url($user -> image)}}" alt="Profile" class="w-full h-full object-cover"/>
+                            <img src="{{Storage::url(auth() -> user() -> image)}}" alt="Profile" class="w-full h-full object-cover"/>
                         </div>
                         
                         <!-- Dropdown Menu -->

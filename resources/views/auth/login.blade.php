@@ -33,13 +33,20 @@
                 <div class="space-y-4">
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
-                        <input id="email" name="email" type="email" required 
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <input id="email" name="email" type="email"  
+                            class="mt-1 block w-full px-3 py-2 border @error('email') border-red-500 @else border-gray-300 @enderror rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            value="{{ old('email') }}">
+                        @error('email')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div>
                         <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                        <input id="password" name="password" type="password" required 
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <input id="password" name="password" type="password"  
+                            class="mt-1 block w-full px-3 py-2 border @error('password') border-red-500 @else border-gray-300 @enderror rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        @error('password')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
 
@@ -58,6 +65,13 @@
                         </a>
                     </div>
                 </div>
+
+                <!-- Add general error message for failed login attempts -->
+                @if (session('status'))
+                    <div class="bg-red-50 text-red-600 p-4 rounded-md text-sm">
+                        {{ session('status') }}
+                    </div>
+                @endif
 
                 <div>
                     <button type="submit" 
