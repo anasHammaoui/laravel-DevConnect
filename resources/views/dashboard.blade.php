@@ -28,11 +28,12 @@
                         <p class="text-gray-500 text-sm mt-2">{{ auth()-> user() -> bio }}</p>
                         
                         <div class="mt-4 flex flex-wrap gap-2">
-                            <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">JavaScript</span>
-                            <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Node.js</span>
-                            <span class="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs">React</span>
-                            <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">Python</span>
-                            <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs">Docker</span>
+                        @foreach(explode(',', $user->skills ?? 'PHP,Laravel,JavaScript') as $skill)
+                                <span class="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
+                                    {{ trim($skill) }}
+                                </span>
+                            @endforeach
+                           
                         </div>
 
                         <div class="mt-4 pt-4 border-t">
@@ -82,15 +83,15 @@
                 </div>
 
                 <!-- Posts -->
-                <div class="bg-white rounded-xl shadow-sm">
+                @foreach ($allPosts as $post)
+                    <div class="bg-white rounded-xl shadow-sm">
                     <div class="p-4">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-3">
-                                <img src="https://avatar.iran.liara.run/public/boy" alt="User" class="w-12 h-12 rounded-full"/>
+                                <img src="{{ Storage::url($post -> user -> image) }}" alt="User" class="w-12 h-12 rounded-full"/>
                                 <div>
-                                    <h3 class="font-semibold">Alex Chen</h3>
-                                    <p class="text-gray-500 text-sm">Senior Backend Developer at Tech Corp</p>
-                                    <p class="text-gray-400 text-xs">1h ago</p>
+                                    <h3 class="font-semibold">{{$post -> user -> name}}</h3>
+                                    <p class="text-gray-400 text-xs">{{ $post -> created_at -> diffForHumans() }}</p>
                                 </div>
                             </div>
                             <button class="text-gray-400 hover:text-gray-600 transition-colors duration-200">
@@ -101,28 +102,16 @@
                         </div>
                         
                         <div class="mt-4">
-                            <p class="text-gray-700">Just implemented a caching layer using Redis that reduced our API response time by 70%! Here's a simple example of how to implement caching in Node.js:</p>
+                            <p class="text-gray-700">{{ $post -> content }}</p>
                             
                             <div class="mt-4 bg-gray-900 rounded-lg p-4 font-mono text-sm text-gray-200 overflow-x-auto">
-                                <pre><code>const redis = require('redis');
-const client = redis.createClient();
-
-async function getCachedData(key) {
-  const cached = await client.get(key);
-  if (cached) {
-    return JSON.parse(cached);
-  }
-  
-  const data = await fetchDataFromDB();
-  await client.setEx(key, 3600, JSON.stringify(data));
-  return data;
-}</code></pre>
+                                <pre><code>{{$post -> code}}</code></pre>
                             </div>
             
                             <div class="mt-4 flex flex-wrap gap-2">
-                                <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">#nodejs</span>
-                                <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs">#redis</span>
-                                <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">#performance</span>
+                               @foreach ($post -> hashtags as $tag )
+                               <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">{{ $tag -> name }}</span>
+                               @endforeach
                             </div>
             
                             <div class="mt-4 flex items-center justify-between border-t pt-4">
@@ -131,7 +120,7 @@ async function getCachedData(key) {
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/>
                                         </svg>
-                                        <span>42</span>
+                                        <span>{{ $post -> likes }}</span>
                                     </button>
                                     <button id="comments-toggle" class="flex items-center space-x-2 text-gray-500 hover:text-blue-500 transition-colors duration-200">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -226,6 +215,9 @@ async function getCachedData(key) {
                         </div>
                     </div>
                 </div>
+             
+                    
+                @endforeach
             </div>
         </div>
     </div>
