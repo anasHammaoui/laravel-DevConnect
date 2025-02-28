@@ -264,7 +264,11 @@
                                 </div>
                                 @if (Auth::user() -> id === $comment -> user_id)
                                 <div class="flex items-center space-x-4 mt-2 ml-2">
-                                    <button class="text-xs text-gray-500 hover:text-blue-500 transition-colors duration-200">Delete</button>
+                                    <form action="{{route('comments.destroy',$comment -> id)}}" method="POST">
+                                        @csrf
+                                        @method('delete')
+                                        <button class="text-xs text-gray-500 hover:text-blue-500 transition-colors duration-200">Delete</button>
+                                        </form>
                                 </div>
                                 @endif
                             </div>
