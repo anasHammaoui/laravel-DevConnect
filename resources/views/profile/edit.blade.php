@@ -65,9 +65,9 @@
                     <div class="flex-grow">
                         <h3 class="text-2xl font-semibold text-gray-900 mb-2">{{ $user->name }}</h3>
                         <p class="text-gray-600 mb-4">{{ $user->email }}</p>
-                        <p class="text-gray-700 mb-4">{{ $user->bio ?? 'Full-stack developer with 5 years of experience in web technologies.' }}</p>
+                        <p class="text-gray-700 mb-4">{{ $user->bio ?? 'No bio yet.' }}</p>
                         <div class="flex flex-wrap gap-2">
-                            @foreach(explode(',', $user->skills ?? 'PHP,Laravel,JavaScript') as $skill)
+                            @foreach(explode(',', $user->skills ?? 'no, skills , yet') as $skill)
                                 <span class="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
                                     {{ trim($skill) }}
                                 </span>

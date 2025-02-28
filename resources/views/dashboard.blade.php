@@ -161,7 +161,7 @@
                 </div>
                 <!-- Posts -->
                 @foreach ($allPosts as $post)
-                    <div class="bg-white rounded-xl shadow-sm">
+                    <div class="bg-white rounded-xl shadow-sm post">
                     <div class="p-4">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-3">
@@ -233,7 +233,7 @@
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
                                         </svg>
-                                        <span>12</span>
+                                        <span>{{ count($post -> comments) }}</span>
                                     </button>
                                 </div>
                                 <button class="text-gray-500 hover:text-blue-500 transition-colors duration-200">
@@ -246,78 +246,47 @@
                     </div>
 
                     <!-- Comments Section - Hidden by Default -->
-                    <div id="comments-section" class="hidden border-t p-4 space-y-4">
-                        <h4 class="font-medium text-gray-700">Comments (12)</h4>
+                    <div class="comments-section transition-all duration-200 hidden border-t p-4 space-y-4">
+                        <h4 class="font-medium text-gray-700">Comments ({{ count($post -> comments) }})</h4>
                         
-                        <!-- Comment 1 -->
+                        @foreach ($post -> comments as $comment )
+                             <!-- Comment 2 -->
                         <div class="flex space-x-3">
-                            <img src="https://avatar.iran.liara.run/public/girl" alt="User" class="w-8 h-8 rounded-full mt-1"/>
+                            <img src="{{Storage::url($comment -> user -> image)}}" alt="User" class="w-8 h-8 rounded-full mt-1"/>
                             <div class="flex-1">
                                 <div class="bg-gray-50 p-3 rounded-lg">
                                     <div class="flex justify-between items-center">
-                                        <h5 class="font-medium text-sm">Jessica Kim</h5>
-                                        <span class="text-gray-400 text-xs">45m ago</span>
+                                        <h5 class="font-medium text-sm">{{ $comment -> user -> name }}</h5>
+                                        <span class="text-gray-400 text-xs">{{$comment -> created_at -> diffForHumans()}}</span>
                                     </div>
-                                    <p class="text-gray-700 text-sm mt-1">This is really helpful! Have you measured the memory usage impact?</p>
+                                    <p class="text-gray-700 text-sm mt-1">{{$comment -> content}}</p>
+                                    
                                 </div>
+                                @if (Auth::user() -> id === $comment -> user_id)
                                 <div class="flex items-center space-x-4 mt-2 ml-2">
-                                    <button class="text-xs text-gray-500 hover:text-blue-500 transition-colors duration-200">Like</button>
-                                    <button class="text-xs text-gray-500 hover:text-blue-500 transition-colors duration-200">Reply</button>
+                                    <button class="text-xs text-gray-500 hover:text-blue-500 transition-colors duration-200">Delete</button>
                                 </div>
+                                @endif
                             </div>
                         </div>
-                        
-                        <!-- Comment 2 -->
-                        <div class="flex space-x-3">
-                            <img src="https://avatar.iran.liara.run/public/man" alt="User" class="w-8 h-8 rounded-full mt-1"/>
-                            <div class="flex-1">
-                                <div class="bg-gray-50 p-3 rounded-lg">
-                                    <div class="flex justify-between items-center">
-                                        <h5 class="font-medium text-sm">Michael Johnson</h5>
-                                        <span class="text-gray-400 text-xs">30m ago</span>
-                                    </div>
-                                    <p class="text-gray-700 text-sm mt-1">You should also consider adding error handling for when Redis is unavailable. Something like:</p>
-                                    <pre class="bg-gray-100 p-2 mt-2 text-xs rounded overflow-x-auto"><code>try {
-  // Redis operations
-} catch (err) {
-  console.error('Redis error:', err);
-  return fetchDataFromDB();
-}</code></pre>
-                                </div>
-                                <div class="flex items-center space-x-4 mt-2 ml-2">
-                                    <button class="text-xs text-gray-500 hover:text-blue-500 transition-colors duration-200">Like</button>
-                                    <button class="text-xs text-gray-500 hover:text-blue-500 transition-colors duration-200">Reply</button>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Comment 3 -->
-                        <div class="flex space-x-3">
-                            <img src="https://avatar.iran.liara.run/public/boy" alt="User" class="w-8 h-8 rounded-full mt-1"/>
-                            <div class="flex-1">
-                                <div class="bg-gray-50 p-3 rounded-lg">
-                                    <div class="flex justify-between items-center">
-                                        <h5 class="font-medium text-sm">Alex Chen <span class="text-blue-500 text-xs">(Author)</span></h5>
-                                        <span class="text-gray-400 text-xs">15m ago</span>
-                                    </div>
-                                    <p class="text-gray-700 text-sm mt-1">@Jessica - Memory usage went up by about 10%, but the performance gains were definitely worth it.</p>
-                                    <p class="text-gray-700 text-sm mt-1">@Michael - Great point! I'll add that to my implementation.</p>
-                                </div>
-                                <div class="flex items-center space-x-4 mt-2 ml-2">
-                                    <button class="text-xs text-gray-500 hover:text-blue-500 transition-colors duration-200">Like</button>
-                                    <button class="text-xs text-gray-500 hover:text-blue-500 transition-colors duration-200">Reply</button>
-                                </div>
-                            </div>
-                        </div>
+                        @endforeach
+                 
                         
                         <!-- New Comment Input -->
                         <div class="flex space-x-3 mt-4">
-                            <img src="https://avatar.iran.liara.run/public/boy" alt="User" class="w-8 h-8 rounded-full"/>
+                            <img src="{{ Storage::url(Auth::user() -> image )}}" alt="User" class="w-8 h-8 rounded-full"/>
                             <div class="flex-1">
-                                <textarea placeholder="Write a comment..." class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"></textarea>
+                               <form action="{{route('comments.store')}}" method="post">
+                                @csrf
+                                <input type="text" name="post_id" value="{{$post -> id}}" class="hidden">
+                               <textarea name="comment" placeholder="Write a comment..." class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"></textarea>
+                               @error('comment')
+                                   <span>{{$message}}</span>
+                               @enderror
                                 <div class="flex justify-end mt-2">
-                                    <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded-lg text-sm transition-colors duration-200">Post</button>
+                                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded-lg text-sm transition-colors duration-200">Post</button>
                                 </div>
+                               </form>
                             </div>
                         </div>
                     </div>
@@ -335,10 +304,13 @@
 <script>
     // comments 
     document.addEventListener('DOMContentLoaded', function() {
-        const commentsToggle = document.getElementById('comments-toggle');
-        const commentsSection = document.getElementById('comments-section');
-        commentsToggle.addEventListener('click', function() {
-            commentsSection.classList.toggle('hidden');
+        let posts = document.querySelectorAll('.post');
+        posts.forEach((post) => {
+            let commentsToggle = post.querySelector('#comments-toggle');
+            let commentsSection = post.querySelector('.comments-section');
+            commentsToggle.addEventListener('click', () => {
+                commentsSection.classList.toggle('hidden');
+            });
         });
     });
     // edit post
@@ -360,5 +332,14 @@
     closeModal.addEventListener('click',()=> {
         editModel.classList.add('hidden');
     })
+    // comments section
+    let posts = document.querySelectorAll('.post');
+    posts.forEach((post) => {
+        let commentsToggle = post.querySelector('#comments-toggle');
+        let commentsSection = post.querySelector('#comments-section');
+        commentsToggle.addEventListener('click', () => {
+            commentsSection.classList.toggle('hidden');
+        });
+    });
 </script>
 @endsection
