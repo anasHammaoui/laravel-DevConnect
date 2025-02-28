@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +20,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('posts', PostController::class)->except(['index']);
     // comments routes
     Route::resource('comments',CommentController::class);
+    Route::post('/posts/{post}/like', [LikeController::class, 'toggleLike']);
 });
 
 require __DIR__.'/auth.php';

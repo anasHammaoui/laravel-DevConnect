@@ -67,7 +67,7 @@
                         <p class="text-gray-600 mb-4">{{ $user->email }}</p>
                         <p class="text-gray-700 mb-4">{{ $user->bio ?? 'No bio yet.' }}</p>
                         <div class="flex flex-wrap gap-2">
-                            @foreach(explode(',', $user->skills ?? 'no, skills , yet') as $skill)
+                            @foreach(explode(',', auth()-> user()->skills ?? 'PHP,Laravel,JavaScript') as $skill)
                                 <span class="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
                                     {{ trim($skill) }}
                                 </span>
