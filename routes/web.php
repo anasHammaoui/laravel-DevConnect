@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ConnectionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
@@ -21,6 +22,12 @@ Route::middleware('auth')->group(function () {
     // comments routes
     Route::resource('comments',CommentController::class);
     Route::post('/posts/{post}/like', [LikeController::class, 'toggleLike']);
+    // friends routes
+    Route::get('/connections', [ConnectionController::class, 'index'])->name('connections.index');
+    Route::post('/connections/{user}', [ConnectionController::class, 'sendRequest'])->name('connections.send');
+    Route::post('/connections/accept/{user}', [ConnectionController::class, 'acceptRequest'])->name('connections.accept');
+    Route::post('/connections/{user}/ignore', [ConnectionController::class, 'ignoreRequest'])->name('connections.ignore');
+    Route::delete('/connections/{user}', [ConnectionController::class, 'removeConnection'])->name('connections.remove');
 });
 
 require __DIR__.'/auth.php';

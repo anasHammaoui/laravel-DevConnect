@@ -46,6 +46,15 @@
                         <span class="bg-red-500 rounded-full w-2 h-2"></span>
                     </a>
                     <div class="relative">
+                        <a href="{{ route('connections.index') }}" id="friend-requests-button" class="flex items-center space-x-1 hover:text-blue-400 transition-colors duration-200">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14c1.656 0 3-1.344 3-3s-1.344-3-3-3-3 1.344-3 3 1.344 3 3 3zm0 2c-2.21 0-4 1.79-4 4v1h8v-1c0-2.21-1.79-4-4-4z"/>
+                            </svg>
+                            <span class="bg-green-500 rounded-full w-2 h-2"></span>
+                        </a>
+
+                    </div>
+                    <div class="relative">
                         <div class="h-8 w-8 rounded-full overflow-hidden cursor-pointer" id="profile-menu-button">
                             <img src="{{Storage::url(auth() -> user() -> image)}}" alt="Profile" class="w-full h-full object-cover"/>
                         </div>
@@ -73,6 +82,7 @@
                             </form>
                         </div>
                     </div>
+                   
                 </div>
             </div>
         </div>
