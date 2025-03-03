@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\User;
+use App\Notifications\UserNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LikeController extends Controller
 {
@@ -20,6 +23,7 @@ class LikeController extends Controller
                 'post:id' => $post->id
             ]);
             $isLiked = true;
+            User::find($post -> user_id) -> notify(new UserNotification('like',Auth::user() -> name));
         }
         
         return redirect()->back();

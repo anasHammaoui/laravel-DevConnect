@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\Post;
+use App\Models\User;
+use App\Notifications\UserNotification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -18,12 +21,13 @@ class CommentController extends Controller
            'comment' => 'required',
            'post_id' => 'required'
        ]);
+       $postOwner = User::find(Post::find($validate['post_id']) -> user_id);
         Comment::create([
               'content' => $validate['comment'],
               'user_id' => Auth::id(),
               'post_id' => $validate['post_id']
          ]);
-   
+        $postOwner -> notify(new UserNotification('comment',Auth::user() -> name));
          return redirect()->back();
     }
 

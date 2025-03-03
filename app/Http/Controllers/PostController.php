@@ -66,4 +66,9 @@ class PostController extends Controller
         $post -> delete();
         return redirect() -> back() -> with('post_deleted','Post deleted successfully');
     }
+    // mark as read function
+    public function markasread(){
+        auth() -> user() -> unreadNotifications -> markAsRead();
+        return redirect() -> back();
+    }
 }

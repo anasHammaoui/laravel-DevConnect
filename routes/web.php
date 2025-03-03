@@ -13,6 +13,7 @@ Route::get('/', function () {
 });
 // dashboard route
 Route::get('/dashboard',[PostController::class,'index'])->middleware(['auth'])->name('dashboard');
+Route::get('/markasread',[PostController::class,'markasread'])->middleware(['auth'])->name('markasread');
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

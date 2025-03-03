@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Connection;
 use App\Models\User;
+use App\Notifications\UserNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -48,6 +49,7 @@ public function sendRequest(Request $request, User $user)
         $connection->receiver_id = $user->id;
         $connection->status = 'pending';
         $connection->save();
+        User::find($user -> id) -> notify(new UserNotification('Friend request',Auth::user() -> name));
         return back();
         // echo 'hello';
 
