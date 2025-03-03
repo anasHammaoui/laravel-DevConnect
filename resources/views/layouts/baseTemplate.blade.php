@@ -45,7 +45,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
                             </svg>
                             @if (auth()->user()->unreadNotifications->count())
-                                <span class="bg-red-500 rounded-full w-4 h-4 flex items-center justify-center text-xs p-1">{{ auth()->user()->unreadNotifications->count() }}</span>
+                                <span class="bg-red-500 rounded-full w-4 h-4 flex items-center justify-center text-xs p-1 countNotifications">{{ auth()->user()->unreadNotifications->count() }}</span>
                             @endif
                         </a>
                         <!-- Dropdown Menu -->
@@ -57,7 +57,7 @@
                                         <a href="{{ route('markasread') }}" class="bg-green-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-600 transition-colors duration-200">Mark All as Read</a>
                                     </div>
                                 @endif
-                                <div class="max-h-64 overflow-y-auto">
+                                <div class="max-h-64 overflow-y-auto notifications">
                                     @foreach (auth()->user()->unreadNotifications as $notification)
                                         <a href="#" class="block px-4 py-2 text-sm text-blue-600 hover:bg-gray-100 transition-colors duration-200">
                                             {{$notification->data['data']}}
@@ -126,6 +126,7 @@
 
     @yield('scripts')
     <!-- At the end of the file, before </body> -->
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const commentsToggle = document.getElementById('comments-toggle');
@@ -134,9 +135,7 @@
             commentsToggle.addEventListener('click', function() {
                 commentsSection.classList.toggle('hidden');
             });
-        });
-
-        // Add dropdown toggle functionality
+              // Add dropdown toggle functionality
         const profileButton = document.getElementById('profile-menu-button');
         const profileDropdown = document.getElementById('profile-dropdown');
         
@@ -164,8 +163,43 @@
             notificationsDropdown.classList.add('hidden');
             }
         });
-        
-        
+       
+        });
+         // pusher real time notifications
+
+  // Enable pusher logging - don't include this in production
+  Pusher.logToConsole = true;
+
+var pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
+  cluster: '{{ env('PUSHER_APP_CLUSTER') }}'
+});
+
+var channel = pusher.subscribe('my-channel');
+channel.bind("Illuminate\\Notifications\\Events\\BroadcastNotificationCreated", function(data) {
+          let countNotification = parseInt(document.querySelector('.countNotifications') ? document.querySelector('.countNotifications').innerText : 0);
+            if (document.querySelector('.countNotifications') ){
+                document.querySelector('.countNotifications').innerText = countNotification + 1;
+            } else {
+                const notificationsButton = document.getElementById('notifications-button');
+                const newNotification = document.createElement('span');
+                newNotification.classList.add('bg-red-500', 'rounded-full', 'w-4', 'h-4', 'flex', 'items-center', 'justify-center', 'text-xs', 'p-1', 'countNotifications');
+                newNotification.innerText = countNotification + 1;
+                notificationsButton.appendChild(newNotification);
+            }
+
+            const notificationDropdown = document.querySelector('.notifications');
+            const newNotification = document.createElement('a');
+            newNotification.href = '#';
+            newNotification.classList.add('block', 'px-4', 'py-2', 'text-sm', 'text-blue-600', 'hover:bg-gray-100', 'transition-colors', 'duration-200', 'unread');
+            newNotification.innerText = data.data;
+            notificationDropdown.insertBefore(newNotification, notificationDropdown.firstChild);
+            
+
+});
+    </script>
+</body>
+
+      
     </script>
 </body>
 </html>
