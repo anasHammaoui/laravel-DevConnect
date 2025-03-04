@@ -15,7 +15,7 @@ class Like extends Component
     public function mount(Post $post)
     {
         $this -> post = $post;
-        // $this -> isLiked = $post -> isLikedBy(auth() -> user());
+        $this -> isLiked =  $this->post->likes()->where('user_id', auth()->id())->first() ? true : false;
     }
     public function toggleLike()
     {
@@ -30,7 +30,9 @@ class Like extends Component
                 'post_id' => $this -> post->id
             ]);
             $this -> isLiked = true;
-            User::find($this ->post -> user_id) -> notify(new UserNotification('like',auth() -> user()-> name));
+            if ($this -> post -> user_id !== auth()->id()){
+                $this -> post -> user -> notify(new UserNotification('like',auth()->user()->name));
+            }
         }
         
         return redirect()->back();
