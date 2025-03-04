@@ -22,7 +22,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('posts', PostController::class)->except(['index']);
     // comments routes
     Route::resource('comments',CommentController::class);
-    Route::post('/posts/{post}/like', [LikeController::class, 'toggleLike']);
     // friends routes
     Route::get('/connections', [ConnectionController::class, 'index'])->name('connections.index');
     Route::post('/connections/{user}', [ConnectionController::class, 'sendRequest'])->name('connections.send');

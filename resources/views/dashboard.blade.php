@@ -1,7 +1,7 @@
 @extends('layouts.baseTemplate')
 
 @section('title', 'Dashboard - DevConnect')
-
+@livewireStyles
 @section('content')
 @if (session('post_deleted'))
     <div x-data="{ showAlert: true }" x-show="showAlert" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
@@ -226,7 +226,7 @@
             
                             <div class="mt-4 flex items-center justify-between border-t pt-4">
                                 <div class="flex items-center space-x-4">
-                                    <form action="/posts/{{ $post -> id }}/like" method="post">
+                                    {{-- <form action="/posts/{{ $post -> id }}/like" method="post">
                                         @csrf
                                     <button type="submit" class="flex items-center space-x-2 {{
                                         $post -> likes -> contains('user_id', Auth::user() -> id) ? 'text-blue-500' : 'text-gray-500'
@@ -236,7 +236,8 @@
                                         </svg>
                                         <span>{{ count($post -> likes) }}</span>
                                     </button>
-                                    </form>
+                                    </form> --}}
+                                    @livewire('like',['post'=>$post])
                                     <button id="comments-toggle" class="flex items-center space-x-2 text-gray-500 hover:text-blue-500 transition-colors duration-200">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
@@ -257,48 +258,50 @@
                     <div class="comments-section transition-all duration-200 hidden border-t p-4 space-y-4">
                         <h4 class="font-medium text-gray-700">Comments ({{ count($post -> comments) }})</h4>
                         
-                        @foreach ($post -> comments as $comment )
-                             <!-- Comment 2 -->
-                        <div class="flex space-x-3">
-                            <img src="{{Storage::url($comment -> user -> image)}}" alt="User" class="w-8 h-8 rounded-full mt-1"/>
-                            <div class="flex-1">
-                                <div class="bg-gray-50 p-3 rounded-lg">
-                                    <div class="flex justify-between items-center">
-                                        <h5 class="font-medium text-sm">{{ $comment -> user -> name }}</h5>
-                                        <span class="text-gray-400 text-xs">{{$comment -> created_at -> diffForHumans()}}</span>
+                        <div class="max-h-64 overflow-y-auto">
+                            @foreach ($post -> comments as $index => $comment)
+                                @if ($index < 4)
+                                    <!-- Comment -->
+                                    <div class="flex space-x-3">
+                                        <img src="{{Storage::url($comment -> user -> image)}}" alt="User" class="w-8 h-8 rounded-full mt-1"/>
+                                        <div class="flex-1">
+                                            <div class="bg-gray-50 p-3 rounded-lg">
+                                                <div class="flex justify-between items-center">
+                                                    <h5 class="font-medium text-sm">{{ $comment -> user -> name }}</h5>
+                                                    <span class="text-gray-400 text-xs">{{$comment -> created_at -> diffForHumans()}}</span>
+                                                </div>
+                                                <p class="text-gray-700 text-sm mt-1">{{$comment -> content}}</p>
+                                            </div>
+                                            @if (Auth::user() -> id === $comment -> user_id)
+                                            <div class="flex items-center space-x-4 mt-2 ml-2">
+                                                <form action="{{route('comments.destroy',$comment -> id)}}" method="POST">
+                                                    @csrf
+                                                    @method('delete')
+                                                    <button class="text-xs text-gray-500 hover:text-blue-500 transition-colors duration-200">Delete</button>
+                                                </form>
+                                            </div>
+                                            @endif
+                                        </div>
                                     </div>
-                                    <p class="text-gray-700 text-sm mt-1">{{$comment -> content}}</p>
-                                    
-                                </div>
-                                @if (Auth::user() -> id === $comment -> user_id)
-                                <div class="flex items-center space-x-4 mt-2 ml-2">
-                                    <form action="{{route('comments.destroy',$comment -> id)}}" method="POST">
-                                        @csrf
-                                        @method('delete')
-                                        <button class="text-xs text-gray-500 hover:text-blue-500 transition-colors duration-200">Delete</button>
-                                        </form>
-                                </div>
                                 @endif
-                            </div>
+                            @endforeach
                         </div>
-                        @endforeach
-                 
                         
                         <!-- New Comment Input -->
                         <div class="flex space-x-3 mt-4">
                             <img src="{{ Storage::url(Auth::user() -> image )}}" alt="User" class="w-8 h-8 rounded-full"/>
                             <div class="flex-1">
-                               <form action="{{route('comments.store')}}" method="post">
-                                @csrf
-                                <input type="text" name="post_id" value="{{$post -> id}}" class="hidden">
-                               <textarea name="comment" placeholder="Write a comment..." class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"></textarea>
-                               @error('comment')
-                                   <span>{{$message}}</span>
-                               @enderror
-                                <div class="flex justify-end mt-2">
-                                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded-lg text-sm transition-colors duration-200">Post</button>
-                                </div>
-                               </form>
+                                <form action="{{route('comments.store')}}" method="post">
+                                    @csrf
+                                    <input type="text" name="post_id" value="{{$post -> id}}" class="hidden">
+                                    <textarea name="comment" placeholder="Write a comment..." class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"></textarea>
+                                    @error('comment')
+                                        <span>{{$message}}</span>
+                                    @enderror
+                                    <div class="flex justify-end mt-2">
+                                        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded-lg text-sm transition-colors duration-200">Post</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -354,4 +357,5 @@
         });
     });
 </script>
+@livewireScripts
 @endsection

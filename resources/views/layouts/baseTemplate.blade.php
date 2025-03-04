@@ -129,12 +129,7 @@
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const commentsToggle = document.getElementById('comments-toggle');
-            const commentsSection = document.getElementById('comments-section');
             
-            commentsToggle.addEventListener('click', function() {
-                commentsSection.classList.toggle('hidden');
-            });
               // Add dropdown toggle functionality
         const profileButton = document.getElementById('profile-menu-button');
         const profileDropdown = document.getElementById('profile-dropdown');
