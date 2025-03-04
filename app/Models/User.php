@@ -48,4 +48,53 @@ class User extends Authenticatable
     public function post(){
         return $this -> hasMany(Post::class);
     }
+    public function comments(){
+        return $this -> hasMany(Comment::class);
+    }
+    public function likes(){
+        return $this -> hasMany(Like::class);
+    }
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'connections', 'receiver_id', 'sender_id')
+            ->wherePivot('status', 'accepted')
+            ->withTimestamps();
+    }
+
+    public function following()
+    {
+        return $this->belongsToMany(User::class, 'connections', 'sender_id', 'receiver_id')
+            ->wherePivot('status', 'accepted')
+            ->withTimestamps();
+    }
+    // sent requests
+    public function sentRequests()
+    {
+        return $this->hasMany(Connection::class, 'sender_id');
+    }
+
+    public function receivedRequests()
+    {
+        return $this->hasMany(Connection::class, 'receiver_id');
+    }
+
+    public function connections()
+    {
+        return $this->hasMany(Connection::class, 'sender_id')
+                    ->where('status', 'accepted')
+                    ->orWhere('receiver_id', $this->id)
+                    ->where('status', 'accepted');
+
+    }
+    public function pendingRequests()
+    {
+        return $this->hasMany(Connection::class, 'receiver_id')
+                    ->where('status', 'pending');
+    }
+    public function friendships()
+    {
+        return $this->hasMany(Connection::class, 'sender_id')
+            ->where('status', 'accepte')
+            ->orWhere('receiver_id', $this->id);
+    }
 }

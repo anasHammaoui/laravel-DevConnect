@@ -3,6 +3,17 @@
 @section('title', 'Dashboard - DevConnect')
 
 @section('content')
+@if (session('post_deleted'))
+    <div x-data="{ showAlert: true }" x-show="showAlert" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <span class="block sm:inline">{{ session('post_deleted') }}</span>
+        <span @click="showAlert = false" class="absolute top-0 bottom-0 right-0 px-4 py-3">
+            <svg class="fill-current h-6 w-6 text-green-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <title>Close</title>
+                <path d="M14.348 5.652a1 1 0 00-1.414 0L10 8.586 7.066 5.652a1 1 0 10-1.414 1.414L8.586 10l-2.934 2.934a1 1 0 101.414 1.414L10 11.414l2.934 2.934a1 1 0 001.414-1.414L11.414 10l2.934-2.934a1 1 0 000-1.414z"/>
+            </svg>
+        </span>
+    </div>
+@endif
     <!-- Main Content -->
     <div class="max-w-7xl mx-auto px-4 pb-10" x-data="{ showModal: false, contentType: '' }">
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -28,11 +39,11 @@
                         <p class="text-gray-500 text-sm mt-2">{{ auth()-> user() -> bio }}</p>
                         
                         <div class="mt-4 flex flex-wrap gap-2">
-                        @foreach(explode(',', $user->skills ?? 'PHP,Laravel,JavaScript') as $skill)
-                                <span class="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
-                                    {{ trim($skill) }}
-                                </span>
-                            @endforeach
+                        @foreach(array_slice(explode(',', auth()-> user()->skills ?? 'PHP,Laravel,JavaScript'), 0, 3) as $skill)
+                            <span class="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
+                                {{ trim($skill) }}
+                            </span>
+                        @endforeach
                            
                         </div>
 
@@ -125,10 +136,32 @@
                         </form>
                     </div>
                 </div>
-
+                <!-- Edit Post Modal -->
+                <div id="editPostModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+                    <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg">
+                        <div class="flex justify-between items-center border-b pb-3 mb-4">
+                            <h3 class="text-xl font-semibold text-gray-800">Edit Post</h3>
+                            <button id="closeModal" class="text-gray-500 hover:text-gray-700">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <form id="editPostForm" action="/posts" method="POST" class="space-y-4">
+                            @csrf
+                            @method('PUT')
+                            <div>
+                                <textarea name="content" id="editPostContent" placeholder="Edit your post..." class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"></textarea>
+                            </div>
+                            <div class="flex justify-end">
+                                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors duration-200">Update</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
                 <!-- Posts -->
                 @foreach ($allPosts as $post)
-                    <div class="bg-white rounded-xl shadow-sm">
+                    <div class="bg-white rounded-xl shadow-sm post">
                     <div class="p-4">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-3">
@@ -138,11 +171,25 @@
                                     <p class="text-gray-400 text-xs">{{ $post -> created_at -> diffForHumans() }}</p>
                                 </div>
                             </div>
-                            <button class="text-gray-400 hover:text-gray-600 transition-colors duration-200">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/>
-                                </svg>
-                            </button>
+                           @if (Auth::user() -> id === $post -> user_id)
+                           <div class="relative" x-data="{ open: false }">
+                                <button class="text-gray-400 hover:text-gray-600 transition-colors duration-200" @click="open = !open">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/>
+                                    </svg>
+                                </button>
+                                <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-20">
+                                    <button data-id="{{$post  -> id}}" data-content="{{$post -> content}}" class="edit-post block px-4 py-2 text-gray-700 hover:bg-gray-100">Edit Post</button>
+                                    <form action="/posts/{{ $post -> id }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class=" block px-4 py-2 text-rose-700 hover:bg-gray-100 transition-colors duration-200">Delete Post</button>
+                                    </form>
+                                   
+                                </div>
+                            </div>
+                               
+                           @endif
                         </div>
                         
                         <div class="mt-4">
@@ -152,8 +199,19 @@
                                 <img src="{{ Storage::url($post -> content_type) }}" alt="Post Image" class="w-full h-auto max-h-96 object-cover rounded-lg mt-4">
                             @elseif ($post -> post_type === 'code')
                             <div class="mt-4 bg-gray-900 rounded-lg p-4 font-mono text-sm text-gray-200 overflow-x-auto">
-                                <pre><code>{{$post -> code}}</code></pre>
+                                <pre><code>{{$post -> content_type}}</code></pre>
                             </div>
+                            @elseif ($post -> post_type === 'link')
+                                <a href="https://{{ $post -> content_type }}" target="_blank" class="text-blue-500 hover:underline break-words">
+                                    <div class="border border-gray-300 rounded-lg p-2 mt-2">
+                                        <div class="flex items-center space-x-2">
+                                            <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                                            </svg>
+                                            <span>{{ $post -> content_type }}</span>
+                                        </div>
+                                    </div>
+                                </a>
                             @endif
             
                             <div class="mt-4 flex flex-wrap gap-2">
@@ -168,17 +226,22 @@
             
                             <div class="mt-4 flex items-center justify-between border-t pt-4">
                                 <div class="flex items-center space-x-4">
-                                    <button class="flex items-center space-x-2 text-gray-500 hover:text-blue-500 transition-colors duration-200">
+                                    <form action="/posts/{{ $post -> id }}/like" method="post">
+                                        @csrf
+                                    <button type="submit" class="flex items-center space-x-2 {{
+                                        $post -> likes -> contains('user_id', Auth::user() -> id) ? 'text-blue-500' : 'text-gray-500'
+                                    }} hover:text-blue-500 transition-colors duration-200">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/>
                                         </svg>
-                                        <span>{{ $post -> likes }}</span>
+                                        <span>{{ count($post -> likes) }}</span>
                                     </button>
+                                    </form>
                                     <button id="comments-toggle" class="flex items-center space-x-2 text-gray-500 hover:text-blue-500 transition-colors duration-200">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
                                         </svg>
-                                        <span>12</span>
+                                        <span>{{ count($post -> comments) }}</span>
                                     </button>
                                 </div>
                                 <button class="text-gray-500 hover:text-blue-500 transition-colors duration-200">
@@ -191,78 +254,51 @@
                     </div>
 
                     <!-- Comments Section - Hidden by Default -->
-                    <div id="comments-section" class="hidden border-t p-4 space-y-4">
-                        <h4 class="font-medium text-gray-700">Comments (12)</h4>
+                    <div class="comments-section transition-all duration-200 hidden border-t p-4 space-y-4">
+                        <h4 class="font-medium text-gray-700">Comments ({{ count($post -> comments) }})</h4>
                         
-                        <!-- Comment 1 -->
+                        @foreach ($post -> comments as $comment )
+                             <!-- Comment 2 -->
                         <div class="flex space-x-3">
-                            <img src="https://avatar.iran.liara.run/public/girl" alt="User" class="w-8 h-8 rounded-full mt-1"/>
+                            <img src="{{Storage::url($comment -> user -> image)}}" alt="User" class="w-8 h-8 rounded-full mt-1"/>
                             <div class="flex-1">
                                 <div class="bg-gray-50 p-3 rounded-lg">
                                     <div class="flex justify-between items-center">
-                                        <h5 class="font-medium text-sm">Jessica Kim</h5>
-                                        <span class="text-gray-400 text-xs">45m ago</span>
+                                        <h5 class="font-medium text-sm">{{ $comment -> user -> name }}</h5>
+                                        <span class="text-gray-400 text-xs">{{$comment -> created_at -> diffForHumans()}}</span>
                                     </div>
-                                    <p class="text-gray-700 text-sm mt-1">This is really helpful! Have you measured the memory usage impact?</p>
+                                    <p class="text-gray-700 text-sm mt-1">{{$comment -> content}}</p>
+                                    
                                 </div>
+                                @if (Auth::user() -> id === $comment -> user_id)
                                 <div class="flex items-center space-x-4 mt-2 ml-2">
-                                    <button class="text-xs text-gray-500 hover:text-blue-500 transition-colors duration-200">Like</button>
-                                    <button class="text-xs text-gray-500 hover:text-blue-500 transition-colors duration-200">Reply</button>
+                                    <form action="{{route('comments.destroy',$comment -> id)}}" method="POST">
+                                        @csrf
+                                        @method('delete')
+                                        <button class="text-xs text-gray-500 hover:text-blue-500 transition-colors duration-200">Delete</button>
+                                        </form>
                                 </div>
+                                @endif
                             </div>
                         </div>
-                        
-                        <!-- Comment 2 -->
-                        <div class="flex space-x-3">
-                            <img src="https://avatar.iran.liara.run/public/man" alt="User" class="w-8 h-8 rounded-full mt-1"/>
-                            <div class="flex-1">
-                                <div class="bg-gray-50 p-3 rounded-lg">
-                                    <div class="flex justify-between items-center">
-                                        <h5 class="font-medium text-sm">Michael Johnson</h5>
-                                        <span class="text-gray-400 text-xs">30m ago</span>
-                                    </div>
-                                    <p class="text-gray-700 text-sm mt-1">You should also consider adding error handling for when Redis is unavailable. Something like:</p>
-                                    <pre class="bg-gray-100 p-2 mt-2 text-xs rounded overflow-x-auto"><code>try {
-  // Redis operations
-} catch (err) {
-  console.error('Redis error:', err);
-  return fetchDataFromDB();
-}</code></pre>
-                                </div>
-                                <div class="flex items-center space-x-4 mt-2 ml-2">
-                                    <button class="text-xs text-gray-500 hover:text-blue-500 transition-colors duration-200">Like</button>
-                                    <button class="text-xs text-gray-500 hover:text-blue-500 transition-colors duration-200">Reply</button>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Comment 3 -->
-                        <div class="flex space-x-3">
-                            <img src="https://avatar.iran.liara.run/public/boy" alt="User" class="w-8 h-8 rounded-full mt-1"/>
-                            <div class="flex-1">
-                                <div class="bg-gray-50 p-3 rounded-lg">
-                                    <div class="flex justify-between items-center">
-                                        <h5 class="font-medium text-sm">Alex Chen <span class="text-blue-500 text-xs">(Author)</span></h5>
-                                        <span class="text-gray-400 text-xs">15m ago</span>
-                                    </div>
-                                    <p class="text-gray-700 text-sm mt-1">@Jessica - Memory usage went up by about 10%, but the performance gains were definitely worth it.</p>
-                                    <p class="text-gray-700 text-sm mt-1">@Michael - Great point! I'll add that to my implementation.</p>
-                                </div>
-                                <div class="flex items-center space-x-4 mt-2 ml-2">
-                                    <button class="text-xs text-gray-500 hover:text-blue-500 transition-colors duration-200">Like</button>
-                                    <button class="text-xs text-gray-500 hover:text-blue-500 transition-colors duration-200">Reply</button>
-                                </div>
-                            </div>
-                        </div>
+                        @endforeach
+                 
                         
                         <!-- New Comment Input -->
                         <div class="flex space-x-3 mt-4">
-                            <img src="https://avatar.iran.liara.run/public/boy" alt="User" class="w-8 h-8 rounded-full"/>
+                            <img src="{{ Storage::url(Auth::user() -> image )}}" alt="User" class="w-8 h-8 rounded-full"/>
                             <div class="flex-1">
-                                <textarea placeholder="Write a comment..." class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"></textarea>
+                               <form action="{{route('comments.store')}}" method="post">
+                                @csrf
+                                <input type="text" name="post_id" value="{{$post -> id}}" class="hidden">
+                               <textarea name="comment" placeholder="Write a comment..." class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"></textarea>
+                               @error('comment')
+                                   <span>{{$message}}</span>
+                               @enderror
                                 <div class="flex justify-end mt-2">
-                                    <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded-lg text-sm transition-colors duration-200">Post</button>
+                                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded-lg text-sm transition-colors duration-200">Post</button>
                                 </div>
+                               </form>
                             </div>
                         </div>
                     </div>
@@ -270,6 +306,7 @@
              
                     
                 @endforeach
+                {{ $allPosts -> links() }}
             </div>
         </div>
     </div>
@@ -277,11 +314,42 @@
 
 @section('scripts')
 <script>
+    // comments 
     document.addEventListener('DOMContentLoaded', function() {
-        const commentsToggle = document.getElementById('comments-toggle');
-        const commentsSection = document.getElementById('comments-section');
-        
-        commentsToggle.addEventListener('click', function() {
+        let posts = document.querySelectorAll('.post');
+        posts.forEach((post) => {
+            let commentsToggle = post.querySelector('#comments-toggle');
+            let commentsSection = post.querySelector('.comments-section');
+            commentsToggle.addEventListener('click', () => {
+                commentsSection.classList.toggle('hidden');
+            });
+        });
+    });
+    // edit post
+    let editBtn = document.querySelectorAll(".edit-post");
+    let editModel = document.getElementById('editPostModal');
+    let closeModal = document.getElementById('closeModal');
+    editBtn.forEach((btn) => {
+        btn.addEventListener("click", () => {
+            editModel.classList.remove('hidden');
+            let postId = btn.getAttribute('data-id');
+            let content = btn.getAttribute('data-content');
+            let editPostForm = document.getElementById('editPostForm');
+            let editPostinput = document.getElementById('editPostContent');
+            editPostinput.textContent = content;
+            editPostForm.action = `/posts/${postId}`;
+            
+        });
+    });
+    closeModal.addEventListener('click',()=> {
+        editModel.classList.add('hidden');
+    })
+    // comments section
+    let posts = document.querySelectorAll('.post');
+    posts.forEach((post) => {
+        let commentsToggle = post.querySelector('#comments-toggle');
+        let commentsSection = post.querySelector('#comments-section');
+        commentsToggle.addEventListener('click', () => {
             commentsSection.classList.toggle('hidden');
         });
     });
