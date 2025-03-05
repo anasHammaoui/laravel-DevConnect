@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Hashtag;
 use App\Models\Post;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
@@ -23,6 +24,7 @@ class PostController extends Controller
         $request->validate([
             "content" => "required|min:5",
         ]);
+        
         $contentType = null;
         $content = null;
         if ($request -> code !== null){
@@ -44,14 +46,20 @@ class PostController extends Controller
             $contentType = null;
             $content = null;
         }
-     Post::create([
+        $post = Post::create([
             'user_id' => Auth::id(),
             'shares' => 0,
             'post_type' => $contentType,
             'content_type' => $content,
             'content' => $request -> content,
-            'hashtags' => $request -> hashtags,
         ]);
+        $tags = $request -> hashtags ? explode(',', $request -> hashtags) : [];
+        $tagsId = [];
+        foreach($tags as $tag){
+            $tag = Hashtag::firstOrCreate(['name' => $tag]);
+            array_push($tagsId, $tag);
+        }
+        $push = $post -> hashtags() -> attach($tagsId);
         return redirect()->route("dashboard");
     }
     public function update(Request $request,$id){

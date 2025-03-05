@@ -209,9 +209,9 @@
                             @endif
             
                             <div class="mt-4 flex flex-wrap gap-2">
-                                @forelse (explode(',', trim($post->hashtags)) as $tag)
+                                @forelse ($post -> hashtags as $tag)
                                     @if(!empty($tag))
-                                        <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">{{ $tag }}</span>
+                                        <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">{{ $tag -> name }}</span>
                                     @endif
                                 @empty
                                     <!-- No tags to display -->
