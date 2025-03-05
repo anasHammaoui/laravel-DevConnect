@@ -164,7 +164,10 @@
          // pusher real time notifications
 
   // Enable pusher logging - don't include this in production
-  Pusher.logToConsole = true;
+  @php
+      $userId = auth() -> check()? auth() -> user() -> id : 0;
+  @endphp
+  Pusher.logToConsole = false;
 
 var pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
   cluster: '{{ env('PUSHER_APP_CLUSTER') }}'
@@ -172,7 +175,8 @@ var pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', {
 
 var channel = pusher.subscribe('my-channel');
 channel.bind("Illuminate\\Notifications\\Events\\BroadcastNotificationCreated", function(data) {
-          let countNotification = parseInt(document.querySelector('.countNotifications') ? document.querySelector('.countNotifications').innerText : 0);
+          if (parseInt(data.user_id) == parseInt({{ $userId }}) ){
+            let countNotification = parseInt(document.querySelector('.countNotifications') ? document.querySelector('.countNotifications').innerText : 0);
             if (document.querySelector('.countNotifications') ){
                 document.querySelector('.countNotifications').innerText = countNotification + 1;
             } else {
@@ -189,6 +193,7 @@ channel.bind("Illuminate\\Notifications\\Events\\BroadcastNotificationCreated", 
             newNotification.classList.add('block', 'px-4', 'py-2', 'text-sm', 'text-blue-600', 'hover:bg-gray-100', 'transition-colors', 'duration-200', 'unread');
             newNotification.innerText = data.data;
             notificationDropdown.insertBefore(newNotification, notificationDropdown.firstChild);
+          }
             
 
 });

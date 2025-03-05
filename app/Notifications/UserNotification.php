@@ -61,6 +61,7 @@ class UserNotification extends Notification
 
         return new BroadcastMessage([
             'data'=>"You have new {$this -> notificationType} from {$this -> notificationFrom}",
+            'user_id' => $notifiable -> id
         ]);
     }
     public function broadcastOn(){
