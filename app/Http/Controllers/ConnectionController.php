@@ -49,7 +49,9 @@ public function sendRequest(Request $request, User $user)
         $connection->receiver_id = $user->id;
         $connection->status = 'pending';
         $connection->save();
-        User::find($user -> id) -> notify(new UserNotification('Friend request',Auth::user() -> name));
+        if ($user-> user_id !== auth()->id()){
+            $user -> notify(new UserNotification('Friend request ',auth()->user()->name));
+        }
         return back();
         // echo 'hello';
 
@@ -62,6 +64,9 @@ public function sendRequest(Request $request, User $user)
         $connection = Connection::where('sender_id', $user->id)->where('receiver_id', Auth::id())->first();
         $connection->status = 'accepted';
         $connection->save();
+        if ($user-> user_id !== auth()->id()){
+            $user -> notify(new UserNotification('acceptation request',auth()->user()->name));
+        }
         return back();
 
 

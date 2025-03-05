@@ -112,23 +112,17 @@
                             <div class="mb-4">
                                 <label class="block text-gray-700">Add Content:</label>
                                 <div class="flex space-x-4 mt-2">
-                                    <template x-if="contentType === 'image'">
-                                        <div>
-                                            <input type="file" name="image" class="hidden" id="image-upload">
-                                            <label for="image-upload" class="cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-500 px-4 py-2 rounded-lg transition-colors duration-200">Image</label>
-                                        </div>
-                                    </template>
-                                    <template x-if="contentType === 'link'">
-                                        <input type="text" name="link" placeholder="Add a link..." class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200">
-                                    </template>
-                                    <template x-if="contentType === 'code'" >
-                                        <textarea name="code" placeholder="Add code snippet..." class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"></textarea>
-                                    </template>
+                                    <div x-show="contentType === 'image'">
+                                        <input type="file" name="image" class="hidden" id="image-upload">
+                                        <label for="image-upload" class="cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-500 px-4 py-2 rounded-lg transition-colors duration-200">Image</label>
+                                    </div>
+                                    <input x-show="contentType === 'link'" type="text" name="link" placeholder="Add a link..." class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200">
+                                    <textarea x-show="contentType === 'code'" name="code" placeholder="Add code snippet..." class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"></textarea>
                                 </div>
                                 <!-- hashtags -->
                                 <div class="my-4">
-                                <textarea name="hashtags" placeholder="tags separeted by commas: PHP, JS, MYSQL..." class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"></textarea>
-                            </div>
+                                    <textarea name="hashtags" placeholder="tags separated by commas: PHP, JS, MYSQL..." class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"></textarea>
+                                </div>
                             </div>
                             <div class="flex justify-end">
                                 <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors duration-200">Post</button>
