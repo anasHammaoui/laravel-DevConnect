@@ -21,13 +21,15 @@ class CommentController extends Controller
            'comment' => 'required',
            'post_id' => 'required'
        ]);
-       $postOwner = User::find(Post::find($validate['post_id']) -> user_id);
+       $post = Post::find($validate['post_id']) ->first();
         Comment::create([
               'content' => $validate['comment'],
               'user_id' => Auth::id(),
               'post_id' => $validate['post_id']
          ]);
-        $postOwner -> notify(new UserNotification('comment',Auth::user() -> name));
+         if ($post -> user_id != Auth::id()){
+        $post -> user -> notify(new UserNotification('comment',Auth::user() -> name));
+    }
          return redirect()->back();
     }
 

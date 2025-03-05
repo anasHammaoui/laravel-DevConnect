@@ -204,7 +204,8 @@
             </form>
         </div>
     </div>
-
+    @endsection
+    @section('scripts')
     <script>
         function previewImage(event) {
             const reader = new FileReader();
@@ -215,4 +216,4 @@
             reader.readAsDataURL(event.target.files[0]);
         }
     </script>
-@endsection
+    @endsection

@@ -6,11 +6,16 @@ use App\Models\Post;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth as Auth;
+use Jorenvh\Share\Share;
 
 class PostController extends Controller
 {
     public function index(){
         $allPosts = Post::latest() -> paginate(5) ;
+        // $shareButtons = \Share::page(
+        //     url('/post'),
+        //     'here is the title'
+        // )->facebook()->twitter()->linkedin();
         // dd($allPosts);
         return view("dashboard", ["allPosts"=>$allPosts]);
     }
