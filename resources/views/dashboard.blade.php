@@ -167,6 +167,20 @@
                         </form>
                     </div>
                 </div>
+                <!-- Filter Form -->
+                <div class="bg-white rounded-xl shadow-sm p-3 mb-4">
+                    <form action="{{ route('dashboard') }}" method="GET" class="flex items-center justify-between">
+                        <div class="text-sm text-gray-700 font-medium">Sort posts by:</div>
+                        <div class="flex space-x-2">
+                            <button type="submit" name="sort" value="recent" class="px-3 py-1.5 text-sm rounded-lg transition-colors duration-200 {{ request('sort') != 'top' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+                                Recent
+                            </button>
+                            <button type="submit" name="sort" value="top" class="px-3 py-1.5 text-sm rounded-lg transition-colors duration-200 {{ request('sort') == 'top' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+                                Top Posts
+                            </button>
+                        </div>
+                    </form>
+                </div>
                 <!-- Posts -->
                 @foreach ($allPosts as $post)
                     <div class="bg-white rounded-xl shadow-sm post">

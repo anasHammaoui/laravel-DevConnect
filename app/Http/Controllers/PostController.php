@@ -14,16 +14,32 @@ class PostController extends Controller
 {
     public function index(Request $request){
         $searchPost = $request -> searchPost;
+        $sorting = $request -> sort;
+    //    sort users
+    if (!$sorting || $sorting === 'recent'){
         $allPosts = Post::whereIn('user_id', Auth::user()->connections->pluck('id'))
-            ->orWhere('user_id', Auth::id())
-            ->where(function($query) use ($searchPost) {
-            $query->where('content', 'like', '%' . $searchPost . '%')
-                ->orWhereHas('hashtags', function($q) use ($searchPost) {
-                $q->where('name', 'like', '%' . $searchPost . '%');
-                });
-            })
-            ->latest()
-            ->paginate(5);
+        ->orWhere('user_id', Auth::id())
+        ->where(function($query) use ($searchPost) {
+        $query->where('content', 'like', '%' . $searchPost . '%')
+            ->orWhereHas('hashtags', function($q) use ($searchPost) {
+            $q->where('name', 'like', '%' . $searchPost . '%');
+            });
+        })
+        ->latest()
+        ->paginate(5);
+    } elseif($sorting === 'top'){
+        $allPosts = Post::whereIn('user_id', Auth::user()->connections->pluck('id'))
+        ->orWhere('user_id', Auth::id())
+        ->where(function($query) use ($searchPost) {
+        $query->where('content', 'like', '%' . $searchPost . '%')
+            ->orWhereHas('hashtags', function($q) use ($searchPost) {
+            $q->where('name', 'like', '%' . $searchPost . '%');
+            });
+        })
+        ->withCount('likes')
+        ->orderBy('likes_count', 'desc')
+        ->paginate(5);
+    }
         $allUsers = User::paginate(5);
         // $shareButtons = \Share::page(
         //     url('/post'),
