@@ -362,7 +362,8 @@
         </div>
         <div class="p-4 space-y-4">
            @foreach ($allUsers as $user)
-                <!-- User 1 -->
+            @if ($user -> id !== Auth::id())
+                    <!-- User 1 -->
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-3">
                     <img src="{{ Storage::url($user -> image)}}" alt="{{ $user -> name }}" class="w-12 h-12 rounded-full object-cover border border-gray-200"/>
@@ -373,6 +374,7 @@
                 </div>  
           
             </div>
+            @endif
            @endforeach
         </div>
         

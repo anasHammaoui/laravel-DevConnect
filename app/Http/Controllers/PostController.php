@@ -14,9 +14,16 @@ class PostController extends Controller
 {
     public function index(Request $request){
         $searchPost = $request -> searchPost;
-        $allPosts = Post::where('content','like','%'. $searchPost.'%') -> orWhereHas('hashtags',function ($q) use ($searchPost){
-            $q -> where('name','like','%'. $searchPost.'%');
-        }) -> latest() -> paginate(5);
+        $allPosts = Post::whereIn('user_id', Auth::user()->connections->pluck('id'))
+            ->orWhere('user_id', Auth::id())
+            ->where(function($query) use ($searchPost) {
+            $query->where('content', 'like', '%' . $searchPost . '%')
+                ->orWhereHas('hashtags', function($q) use ($searchPost) {
+                $q->where('name', 'like', '%' . $searchPost . '%');
+                });
+            })
+            ->latest()
+            ->paginate(5);
         $allUsers = User::paginate(5);
         // $shareButtons = \Share::page(
         //     url('/post'),
