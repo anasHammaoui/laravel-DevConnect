@@ -1,7 +1,20 @@
 @extends('layouts.baseTemplate')
 
 @section('title', 'Friends - DevConnect')
-
+@section('searchbox')
+<div class="relative">
+    <form action="{{ route('connections.index') }}" method="get" class="my-2">
+      <input type="text"
+      name="searchUser" 
+             placeholder="Search for users" 
+             class="bg-gray-800 pl-10 pr-4 py-2 rounded-lg w-96 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-gray-700 transition-all duration-200"
+      >
+      <svg class="w-5 h-5 text-gray-400 absolute left-3 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+      </svg>
+    </form>
+  </div>
+@endsection
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -10,8 +10,10 @@ use Illuminate\Support\Facades\Auth;
 
 class ConnectionController extends Controller
 {
-    public function index()
-    {
+    public function index(Request $request)
+    {   
+        $searchUsers = $request->searchUser;
+        $users = User::where('name', 'like', '%' . $searchUsers . '%');
         $user = Auth::user();
         $pandingRequests = $user->pendingRequests;
         $friends = $user->friendships;
@@ -21,9 +23,9 @@ class ConnectionController extends Controller
         $connections = $followers->concat($following);
         // usrs they are not following and not followed by they they status are not panding
 
-        $otherusers = User::whereNotIn('id', $connections->pluck('id'))->where('id', '!=', $user->id)->get();
+        $otherusers = $users -> whereNotIn('id', $connections->pluck('id'))->where('id', '!=', $user->id)->get();
 
-        $otherusers = User::whereNotIn('id', $connections->pluck('id'))
+        $otherusers = $users -> whereNotIn('id', $connections->pluck('id'))
         ->where('id', '!=', $user->id)
         ->get()
         ->map(function ($otheruser) use ($user) {

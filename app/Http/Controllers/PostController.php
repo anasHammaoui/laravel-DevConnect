@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Hashtag;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth as Auth;
@@ -11,14 +12,18 @@ use Jorenvh\Share\Share;
 
 class PostController extends Controller
 {
-    public function index(){
-        $allPosts = Post::latest() -> paginate(5) ;
+    public function index(Request $request){
+        $searchPost = $request -> searchPost;
+        $allPosts = Post::where('content','like','%'. $searchPost.'%') -> orWhereHas('hashtags',function ($q) use ($searchPost){
+            $q -> where('name','like','%'. $searchPost.'%');
+        }) -> latest() -> paginate(5);
+        $allUsers = User::paginate(5);
         // $shareButtons = \Share::page(
         //     url('/post'),
         //     'here is the title'
         // )->facebook()->twitter()->linkedin();
         // dd($allPosts);
-        return view("dashboard", ["allPosts"=>$allPosts]);
+        return view("dashboard", ["allPosts"=>$allPosts, "connections" => Auth::user() -> connections, "allUsers" => $allUsers]);
     }
     public function store(Request $request){
         $request->validate([

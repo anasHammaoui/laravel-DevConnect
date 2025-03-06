@@ -1,6 +1,20 @@
 @extends('layouts.baseTemplate')
 
 @section('title', 'Dashboard - DevConnect')
+@section('searchbox')
+<div class="relative">
+    <form action="{{ route('dashboard') }}" method="get" class="my-2">
+      <input type="text"
+      name="searchPost" 
+             placeholder="Search for posts by content or tags" 
+             class="bg-gray-800 pl-10 pr-4 py-2 rounded-lg w-96 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-gray-700 transition-all duration-200"
+      >
+      <svg class="w-5 h-5 text-gray-400 absolute left-3 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+      </svg>
+    </form>
+  </div>
+@endsection
 @livewireStyles
 @section('content')
 @if (session('post_deleted'))
@@ -50,11 +64,11 @@
                         <div class="mt-4 pt-4 border-t">
                             <div class="flex justify-between text-sm">
                                 <span class="text-gray-500">Connections</span>
-                                <span class="text-blue-600 font-medium">487</span>
+                                <span class="text-blue-600 font-medium">{{ $connections -> count() }}</span>
                             </div>
                             <div class="flex justify-between text-sm mt-2">
                                 <span class="text-gray-500">Posts</span>
-                                <span class="text-blue-600 font-medium">52</span>
+                                <span class="text-blue-600 font-medium">{{ $allPosts->where('user_id', Auth::id())->count() }}</span>
                             </div>
                         </div>
                     </div>
@@ -339,6 +353,34 @@
                 @endforeach
                 {{ $allPosts -> links() }}
             </div>
+            <!-- Right Sidebar (Add this after the Main Feed closing div) -->
+<div class="space-y-6">
+    <!-- People You May Know Card -->
+    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+        <div class="p-4 border-b">
+            <h3 class="font-bold text-lg">Our Network</h3>
+        </div>
+        <div class="p-4 space-y-4">
+           @foreach ($allUsers as $user)
+                <!-- User 1 -->
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <img src="{{ Storage::url($user -> image)}}" alt="{{ $user -> name }}" class="w-12 h-12 rounded-full object-cover border border-gray-200"/>
+                    <div>
+                        <h4 class="font-medium">{{ $user -> name  }}</h4>
+                        <p class="text-xs text-gray-500">{{ $user -> bio  }}</p>
+                    </div>
+                </div>  
+          
+            </div>
+           @endforeach
+        </div>
+        
+        <div class="p-4 border-t text-center">
+           {{ $allUsers -> links() }}
+        </div>
+    </div>
+</div>
         </div>
     </div>
 @endsection
