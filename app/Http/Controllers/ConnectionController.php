@@ -10,8 +10,10 @@ use Illuminate\Support\Facades\Auth;
 
 class ConnectionController extends Controller
 {
-    public function index()
-    {
+    public function index(Request $request)
+    {   
+        $searchUsers = $request->searchUser;
+        $users = User::where('name', 'like', '%' . $searchUsers . '%');
         $user = Auth::user();
         $pandingRequests = $user->pendingRequests;
         $friends = $user->friendships;
@@ -21,9 +23,9 @@ class ConnectionController extends Controller
         $connections = $followers->concat($following);
         // usrs they are not following and not followed by they they status are not panding
 
-        $otherusers = User::whereNotIn('id', $connections->pluck('id'))->where('id', '!=', $user->id)->get();
+        $otherusers = $users -> whereNotIn('id', $connections->pluck('id'))->where('id', '!=', $user->id)->get();
 
-        $otherusers = User::whereNotIn('id', $connections->pluck('id'))
+        $otherusers = $users -> whereNotIn('id', $connections->pluck('id'))
         ->where('id', '!=', $user->id)
         ->get()
         ->map(function ($otheruser) use ($user) {
@@ -49,7 +51,9 @@ public function sendRequest(Request $request, User $user)
         $connection->receiver_id = $user->id;
         $connection->status = 'pending';
         $connection->save();
-        User::find($user -> id) -> notify(new UserNotification('Friend request',Auth::user() -> name));
+        if ($user-> user_id !== auth()->id()){
+            $user -> notify(new UserNotification('Friend request ',auth()->user()->name));
+        }
         return back();
         // echo 'hello';
 
@@ -62,6 +66,9 @@ public function sendRequest(Request $request, User $user)
         $connection = Connection::where('sender_id', $user->id)->where('receiver_id', Auth::id())->first();
         $connection->status = 'accepted';
         $connection->save();
+        if ($user-> user_id !== auth()->id()){
+            $user -> notify(new UserNotification('acceptation request',auth()->user()->name));
+        }
         return back();
 
 

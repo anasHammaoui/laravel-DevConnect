@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Hashtag;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth as Auth;
@@ -10,19 +12,47 @@ use Jorenvh\Share\Share;
 
 class PostController extends Controller
 {
-    public function index(){
-        $allPosts = Post::latest() -> paginate(5) ;
+    public function index(Request $request){
+        $searchPost = $request -> searchPost;
+        $sorting = $request -> sort;
+    //    sort users
+    if (!$sorting || $sorting === 'recent'){
+        $allPosts = Post::whereIn('user_id', Auth::user()->connections->pluck('id'))
+        ->orWhere('user_id', Auth::id())
+        ->where(function($query) use ($searchPost) {
+        $query->where('content', 'like', '%' . $searchPost . '%')
+            ->orWhereHas('hashtags', function($q) use ($searchPost) {
+            $q->where('name', 'like', '%' . $searchPost . '%');
+            });
+        })
+        ->latest()
+        ->paginate(5);
+    } elseif($sorting === 'top'){
+        $allPosts = Post::whereIn('user_id', Auth::user()->connections->pluck('id'))
+        ->orWhere('user_id', Auth::id())
+        ->where(function($query) use ($searchPost) {
+        $query->where('content', 'like', '%' . $searchPost . '%')
+            ->orWhereHas('hashtags', function($q) use ($searchPost) {
+            $q->where('name', 'like', '%' . $searchPost . '%');
+            });
+        })
+        ->withCount('likes')
+        ->orderBy('likes_count', 'desc')
+        ->paginate(5);
+    }
+        $allUsers = User::paginate(5);
         // $shareButtons = \Share::page(
         //     url('/post'),
         //     'here is the title'
         // )->facebook()->twitter()->linkedin();
         // dd($allPosts);
-        return view("dashboard", ["allPosts"=>$allPosts]);
+        return view("dashboard", ["allPosts"=>$allPosts, "connections" => Auth::user() -> connections, "allUsers" => $allUsers]);
     }
     public function store(Request $request){
         $request->validate([
             "content" => "required|min:5",
         ]);
+        
         $contentType = null;
         $content = null;
         if ($request -> code !== null){
@@ -44,14 +74,20 @@ class PostController extends Controller
             $contentType = null;
             $content = null;
         }
-     Post::create([
+        $post = Post::create([
             'user_id' => Auth::id(),
             'shares' => 0,
             'post_type' => $contentType,
             'content_type' => $content,
             'content' => $request -> content,
-            'hashtags' => $request -> hashtags,
         ]);
+        $tags = $request -> hashtags ? explode(',', $request -> hashtags) : [];
+        $tagsId = [];
+        foreach($tags as $tag){
+            $tag = Hashtag::firstOrCreate(['name' => $tag]);
+            array_push($tagsId, $tag);
+        }
+        $push = $post -> hashtags() -> attach($tagsId);
         return redirect()->route("dashboard");
     }
     public function update(Request $request,$id){

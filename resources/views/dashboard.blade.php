@@ -1,6 +1,20 @@
 @extends('layouts.baseTemplate')
 
 @section('title', 'Dashboard - DevConnect')
+@section('searchbox')
+<div class="relative">
+    <form action="{{ route('dashboard') }}" method="get" class="my-2">
+      <input type="text"
+      name="searchPost" 
+             placeholder="Search for posts by content or tags" 
+             class="bg-gray-800 pl-10 pr-4 py-2 rounded-lg w-96 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-gray-700 transition-all duration-200"
+      >
+      <svg class="w-5 h-5 text-gray-400 absolute left-3 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+      </svg>
+    </form>
+  </div>
+@endsection
 @livewireStyles
 @section('content')
 @if (session('post_deleted'))
@@ -50,11 +64,11 @@
                         <div class="mt-4 pt-4 border-t">
                             <div class="flex justify-between text-sm">
                                 <span class="text-gray-500">Connections</span>
-                                <span class="text-blue-600 font-medium">487</span>
+                                <span class="text-blue-600 font-medium">{{ $connections -> count() }}</span>
                             </div>
                             <div class="flex justify-between text-sm mt-2">
                                 <span class="text-gray-500">Posts</span>
-                                <span class="text-blue-600 font-medium">52</span>
+                                <span class="text-blue-600 font-medium">{{ $allPosts->where('user_id', Auth::id())->count() }}</span>
                             </div>
                         </div>
                     </div>
@@ -112,23 +126,17 @@
                             <div class="mb-4">
                                 <label class="block text-gray-700">Add Content:</label>
                                 <div class="flex space-x-4 mt-2">
-                                    <template x-if="contentType === 'image'">
-                                        <div>
-                                            <input type="file" name="image" class="hidden" id="image-upload">
-                                            <label for="image-upload" class="cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-500 px-4 py-2 rounded-lg transition-colors duration-200">Image</label>
-                                        </div>
-                                    </template>
-                                    <template x-if="contentType === 'link'">
-                                        <input type="text" name="link" placeholder="Add a link..." class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200">
-                                    </template>
-                                    <template x-if="contentType === 'code'" >
-                                        <textarea name="code" placeholder="Add code snippet..." class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"></textarea>
-                                    </template>
+                                    <div x-show="contentType === 'image'">
+                                        <input type="file" name="image" class="hidden" id="image-upload">
+                                        <label for="image-upload" class="cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-500 px-4 py-2 rounded-lg transition-colors duration-200">Image</label>
+                                    </div>
+                                    <input x-show="contentType === 'link'" type="text" name="link" placeholder="Add a link..." class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200">
+                                    <textarea x-show="contentType === 'code'" name="code" placeholder="Add code snippet..." class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"></textarea>
                                 </div>
                                 <!-- hashtags -->
                                 <div class="my-4">
-                                <textarea name="hashtags" placeholder="tags separeted by commas: PHP, JS, MYSQL..." class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"></textarea>
-                            </div>
+                                    <textarea name="hashtags" placeholder="tags separated by commas: PHP, JS, MYSQL..." class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"></textarea>
+                                </div>
                             </div>
                             <div class="flex justify-end">
                                 <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors duration-200">Post</button>
@@ -158,6 +166,20 @@
                             </div>
                         </form>
                     </div>
+                </div>
+                <!-- Filter Form -->
+                <div class="bg-white rounded-xl shadow-sm p-3 mb-4">
+                    <form action="{{ route('dashboard') }}" method="GET" class="flex items-center justify-between">
+                        <div class="text-sm text-gray-700 font-medium">Sort posts by:</div>
+                        <div class="flex space-x-2">
+                            <button type="submit" name="sort" value="recent" class="px-3 py-1.5 text-sm rounded-lg transition-colors duration-200 {{ request('sort') != 'top' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+                                Recent
+                            </button>
+                            <button type="submit" name="sort" value="top" class="px-3 py-1.5 text-sm rounded-lg transition-colors duration-200 {{ request('sort') == 'top' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+                                Top Posts
+                            </button>
+                        </div>
+                    </form>
                 </div>
                 <!-- Posts -->
                 @foreach ($allPosts as $post)
@@ -215,9 +237,9 @@
                             @endif
             
                             <div class="mt-4 flex flex-wrap gap-2">
-                                @forelse (explode(',', trim($post->hashtags)) as $tag)
+                                @forelse ($post -> hashtags as $tag)
                                     @if(!empty($tag))
-                                        <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">{{ $tag }}</span>
+                                        <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">{{ $tag -> name }}</span>
                                     @endif
                                 @empty
                                     <!-- No tags to display -->
@@ -345,6 +367,36 @@
                 @endforeach
                 {{ $allPosts -> links() }}
             </div>
+            <!-- Right Sidebar (Add this after the Main Feed closing div) -->
+<div class="space-y-6">
+    <!-- People You May Know Card -->
+    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+        <div class="p-4 border-b">
+            <h3 class="font-bold text-lg">Our Network</h3>
+        </div>
+        <div class="p-4 space-y-4">
+           @foreach ($allUsers as $user)
+            @if ($user -> id !== Auth::id())
+                    <!-- User 1 -->
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <img src="{{ Storage::url($user -> image)}}" alt="{{ $user -> name }}" class="w-12 h-12 rounded-full object-cover border border-gray-200"/>
+                    <div>
+                        <h4 class="font-medium">{{ $user -> name  }}</h4>
+                        <p class="text-xs text-gray-500">{{ $user -> bio  }}</p>
+                    </div>
+                </div>  
+          
+            </div>
+            @endif
+           @endforeach
+        </div>
+        
+        <div class="p-4 border-t text-center">
+           {{ $allUsers -> links() }}
+        </div>
+    </div>
+</div>
         </div>
     </div>
 @endsection
