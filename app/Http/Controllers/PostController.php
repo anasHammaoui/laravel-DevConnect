@@ -17,25 +17,27 @@ class PostController extends Controller
         $sorting = $request -> sort;
     //    sort users
     if (!$sorting || $sorting === 'recent'){
-        $allPosts = Post::whereIn('user_id', Auth::user()->connections->pluck('id'))
+        $allPosts = Post::where(function($query) use ($searchPost) {
+            $query->where('content', 'like', '%' . $searchPost . '%')
+                ->orWhereHas('hashtags', function($q) use ($searchPost) {
+                $q->where('name', $searchPost);
+                });
+            })
+            ->whereIn('user_id', Auth::user()->connections->pluck('sender_id'))
+         -> orWhereIn('user_id', Auth::user()->connections->pluck('receiver_id'))
         ->orWhere('user_id', Auth::id())
-        ->where(function($query) use ($searchPost) {
-        $query->where('content', 'like', '%' . $searchPost . '%')
-            ->orWhereHas('hashtags', function($q) use ($searchPost) {
-            $q->where('name', 'like', '%' . $searchPost . '%');
-            });
-        })
         ->latest()
         ->paginate(5);
     } elseif($sorting === 'top'){
-        $allPosts = Post::whereIn('user_id', Auth::user()->connections->pluck('id'))
+        $allPosts = Post::where(function($query) use ($searchPost) {
+            $query->where('content', 'like', '%' . $searchPost . '%')
+                ->orWhereHas('hashtags', function($q) use ($searchPost) {
+                $q->where('name', $searchPost);
+                });
+            })
+            ->whereIn('user_id', Auth::user()->connections->pluck('sender_id'))
+         -> orWhereIn('user_id', Auth::user()->connections->pluck('receiver_id'))
         ->orWhere('user_id', Auth::id())
-        ->where(function($query) use ($searchPost) {
-        $query->where('content', 'like', '%' . $searchPost . '%')
-            ->orWhereHas('hashtags', function($q) use ($searchPost) {
-            $q->where('name', 'like', '%' . $searchPost . '%');
-            });
-        })
         ->withCount('likes')
         ->orderBy('likes_count', 'desc')
         ->paginate(5);

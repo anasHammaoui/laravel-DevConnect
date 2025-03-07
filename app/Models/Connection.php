@@ -28,4 +28,5 @@ class Connection extends Model
         ->where('status', 'accepte')
         ->orWhere('receiver_id', $this->id);
     }
+
 }

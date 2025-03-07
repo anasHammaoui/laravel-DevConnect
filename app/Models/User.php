@@ -97,4 +97,7 @@ class User extends Authenticatable
             ->where('status', 'accepte')
             ->orWhere('receiver_id', $this->id);
     }
+    public function messages(){
+        return $this -> hasMany(Message::class);
+    }
 }
