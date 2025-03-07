@@ -4,6 +4,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ConnectionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LikeController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +29,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/connections/accept/{user}', [ConnectionController::class, 'acceptRequest'])->name('connections.accept');
     Route::post('/connections/{user}/ignore', [ConnectionController::class, 'ignoreRequest'])->name('connections.ignore');
     Route::delete('/connections/{user}', [ConnectionController::class, 'removeConnection'])->name('connections.remove');
+    // messages routes
+    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
+    Route::get('/messages/{user}', [MessageController::class, 'chat'])->name('message.user');
+    Route::post('/messages/{user}/send', [MessageController::class, 'send'])->name('message.send');
 });
 
 require __DIR__.'/auth.php';

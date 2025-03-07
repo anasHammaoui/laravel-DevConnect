@@ -12,7 +12,7 @@
         <div class="max-w-7xl mx-auto px-4">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
-                    <h1 class="text-2xl font-bold text-blue-600">JobConnect</h1>
+                    <h1 class="text-2xl font-bold text-blue-600">DevConnect</h1>
                 </div>
             </div>
         </div>
