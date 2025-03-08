@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Message;
 use App\Models\User;
+use App\Notifications\MessageNotification;
+use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
 
 class MessageController extends Controller
@@ -43,7 +45,8 @@ class MessageController extends Controller
             'reciever_id' => $user->id,
             'message' => $validate['message']
         ]);
-        return redirect()-> back();
+        $user -> notify(new MessageNotification($validate['message']));
+        return back();
     }
 
 }

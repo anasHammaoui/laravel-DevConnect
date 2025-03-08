@@ -19,22 +19,19 @@ class PostController extends Controller
     if (!$sorting || $sorting === 'recent'){
         $allPosts = Post::where('content', 'like', '%' . $searchPost . '%')
                 ->orWhereHas('hashtags', function($q) use ($searchPost) {
-                $q->where('name', $searchPost);
+                $q->where('name','=', $searchPost);
                 })
         ->latest()
         ->paginate(5);
     } elseif($sorting === 'top'){
         $allPosts = Post::where('content', 'like', '%' . $searchPost . '%')
         ->orWhereHas('hashtags', function($q) use ($searchPost) {
-        $q->where('name', $searchPost);
+        $q->where('name','=', $searchPost);
         })
         ->withCount('likes')
         ->orderBy('likes_count', 'desc')
         ->paginate(5);
     }
-    foreach($allPosts as $post){
-        dd($post -> hashtags);
-        }
         $allUsers = User::paginate(5);
         // $shareButtons = \Share::page(
         //     url('/post'),
