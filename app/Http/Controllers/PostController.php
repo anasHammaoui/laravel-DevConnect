@@ -32,6 +32,9 @@ class PostController extends Controller
         ->orderBy('likes_count', 'desc')
         ->paginate(5);
     }
+    foreach($allPosts as $post){
+        dd($post -> hashtags);
+        }
         $allUsers = User::paginate(5);
         // $shareButtons = \Share::page(
         //     url('/post'),
