@@ -65,7 +65,7 @@
             </div>
             
             <!-- Chat Area -->
-           @isset($talkedTo)
+           @if(isset($talkedTo))
            <div class="w-3/4 flex flex-col">
             <!-- Chat Header -->
             <div class="p-4 border-b border-gray-200 flex items-center justify-between">
@@ -131,7 +131,11 @@
                </form>
             </div>
         </div>
-           @endisset
+        @else
+        <div class="flex-1 flex items-center justify-center">
+            <p class="text-gray-500">Select a connection to start messaging</p>
+        </div>
+           @endif
         </div>
     </div>
 </div>

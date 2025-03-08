@@ -138,16 +138,15 @@
             <p class="text-xs text-gray-500 mt-1">Connected {{ $connection->pivot?->created_at->diffForHumans() ?? 'recently' }}</p>
             </div>
             </div>
-            <div class="flex space-x-3 mt-4">
-            <form action="" class="w-1/2">
-            <button type="submit" class="w-full px-4 py-2.5 bg-indigo-100 text-indigo-700 rounded-xl hover:bg-indigo-200 transition-all duration-300 font-medium">Message</button>
-            </form>
-            <form action="{{route("connections.remove" ,  $connection->id  )}}" method="POST" class="w-1/2">
-            @csrf
-            @method("delete")
-            <button type="submit" class="w-full px-4 py-2.5 border-2 border-red-500 text-red-500 rounded-xl hover:bg-red-50 transition-all duration-300 font-medium">Remove</button>
-            </form>
-            </div>
+        <div class="flex space-x-3 mt-4">
+        <a href="/messages/{{ $connection->id }}" class="w-1/2 text-center px-4 py-2.5 bg-indigo-100 text-indigo-700 rounded-xl hover:bg-indigo-200 transition-all duration-300 font-medium">Message</a>
+        
+        <form action="{{route("connections.remove" ,  $connection->id  )}}" method="POST" class="w-1/2">
+        @csrf
+        @method("delete")
+        <button type="submit" class="w-full px-4 py-2.5 border-2 border-red-500 text-red-500 rounded-xl hover:bg-red-50 transition-all duration-300 font-medium">Remove</button>
+        </form>
+        </div>
             </div>
             @endforeach
             </div>
