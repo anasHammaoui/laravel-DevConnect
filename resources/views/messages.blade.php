@@ -73,7 +73,7 @@
                         <img src="{{ Storage::url($talkedTo -> image) }}" alt="User" class="w-10 h-10 rounded-full">
                     </div>
                     <div>
-                        <a href="/profile/{{ $connection -> id }}" class="font-medium text-gray-900">{{ $talkedTo -> name }}</a>
+                        <a href="/profile/{{ $talkedTo -> id }}" class="font-medium text-gray-900">{{ $talkedTo -> name }}</a>
                     </div>
                 </div>
                
