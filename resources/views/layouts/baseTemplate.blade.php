@@ -19,7 +19,7 @@
             <div class="flex justify-between items-center h-16">
                 <!-- Logo -->
                 <div class="flex items-center space-x-4">
-                    <div class="text-2xl font-bold text-blue-400"><a href="/" class="decoration-none">&lt;DevConnect/&gt;</a></div>
+                    <div class="text-2xl font-bold text-blue-400"><a href="/dashboard" class="decoration-none">&lt;DevConnect/&gt;</a></div>
                     <div class="hidden md:block">
                         @yield('searchbox')
                     </div>
@@ -145,17 +145,47 @@
                         <span class="bg-blue-500 rounded-full w-2 h-2"></span>
                     </div>
                 </a>
-                <a href="#" class="block py-2 hover:text-blue-400 transition-colors duration-200 mobile-notifications">
-                    <div class="flex items-center space-x-3">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-                        </svg>
-                        <span>Notifications</span>
-                        @if (auth()->user()->unreadNotifications->count())
-                            <span class="bg-red-500 rounded-full w-4 h-4 flex items-center justify-center text-xs p-1">{{ auth()->user()->unreadNotifications->count() }}</span>
+                <div class="relative">
+                    <a href="#" id="" class="notifications-dropdown block py-2 hover:text-blue-400 transition-colors duration-200 mobile-notifications" id="mobile-notifications-button">
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                            </svg>
+                            <span>Notifications</span>
+                            @if (auth()->user()->unreadNotifications->count())
+                                <span class="bg-red-500 rounded-full w-4 h-4 flex items-center justify-center text-xs p-1 mobile-count-notifications">{{ auth()->user()->unreadNotifications->count() }}</span>
+                            @endif
+                        </div>
+                    </a>
+                    
+                    <!-- Mobile Dropdown Menu -->
+                    <div id="" class="mobile-notifications-dropdown hidden w-full bg-gray-800 rounded-lg shadow-lg py-2 z-50 mt-2">
+                        @if (auth()->user()->notifications->count())
+                            @if (auth()->user()->unreadNotifications->count())
+                                <div class="flex justify-between items-center px-4 py-2 border-b border-gray-700">
+                                    <span class="text-white font-semibold">Notifications</span>
+                                    <a href="{{ route('markasread') }}" class="bg-green-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-600 transition-colors duration-200">Mark All as Read</a>
+                                </div>
+                            @endif
+                            <div class="max-h-64 overflow-y-auto mobile-notifications-container">
+                                @foreach (auth()->user()->unreadNotifications as $notification)
+                                    <a href="#" class="block px-4 py-2 text-sm text-blue-400 hover:bg-gray-700 transition-colors duration-200">
+                                        {{$notification->data['data']}}
+                                    </a>
+                                @endforeach
+                                @foreach (auth()->user()->readNotifications as $notification)
+                                    <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 transition-colors duration-200">
+                                        {{$notification->data['data']}}
+                                    </a>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="px-4 py-2 text-gray-300">
+                                You have no notifications
+                            </div>
                         @endif
                     </div>
-                </a>
+                </div>
                 <a href="{{ route('connections.index') }}" class="block py-2 hover:text-blue-400 transition-colors duration-200">
                     <div class="flex items-center space-x-3">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -204,10 +234,15 @@
               // Add dropdown toggle functionality
         const profileButton = document.getElementById('profile-menu-button');
         const profileDropdown = document.getElementById('profile-dropdown');
-        
+        const notificationButton = document.querySelector('.notifications-dropdown');
+        const notificationDropDown = document.querySelector('.mobile-notifications-dropdown');
         profileButton.addEventListener('click', () => {
             profileDropdown.classList.toggle('hidden');
         });
+        notificationButton.addEventListener('click', () => {
+            notificationDropDown.classList.toggle('hidden');
+        });
+        
         
         // Close dropdown when clicking outside
         document.addEventListener('click', (event) => {

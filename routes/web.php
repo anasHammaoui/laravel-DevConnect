@@ -33,6 +33,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
     Route::get('/messages/{user}', [MessageController::class, 'chat'])->name('message.user');
     Route::post('/messages/{user}/send', [MessageController::class, 'send'])->name('message.send');
+    // profile routes
+    Route::get('/profile/{user}',[ProfileController::class, 'showUserProfile']) -> name('profile.show');
 });
 
 require __DIR__.'/auth.php';

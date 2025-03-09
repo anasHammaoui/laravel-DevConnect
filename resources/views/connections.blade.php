@@ -91,7 +91,7 @@
             <h2 class="text-xl font-bold text-gray-800">Pending Invitations</h2>
             </div>
             <div class="divide-y divide-gray-100 overflow-y-auto" style="height: 300px;">
-            @foreach ($pandingRequests->take(2) as $request)
+            @foreach ($pandingRequests as $request)
             <div class="p-6 hover:bg-gray-50 transition-all duration-300">
             <!-- Keep existing content for each pending request -->
             <div class="flex items-center space-x-4">
@@ -99,7 +99,7 @@
              alt="{{ $request->sender->name }}" 
              class="w-14 h-14 rounded-full border-4 border-blue-100 shadow-sm">
             <div class="flex-1 min-w-0">
-            <h3 class="text-lg font-semibold text-gray-900">{{ $request->sender->name }}</h3>
+            <a href="/profile/{{ $request -> sender -> id }}" class="text-lg font-semibold text-gray-900">{{ $request->sender->name }}</a>
             <p class="text-sm text-gray-600">{{ $request->sender->headline ?? 'Developer' }}</p>
             </div>
             </div>
@@ -133,7 +133,7 @@
              alt="{{ $connection->name }}" 
              class="w-14 h-14 rounded-full border-4 border-green-100 shadow-sm">
             <div class="flex-1 min-w-0">
-            <h3 class="text-lg font-semibold text-gray-900">{{ $connection->name }}</h3>
+            <a href="/profile/{{ $connection -> id }}" class="text-lg font-semibold text-gray-900">{{ $connection->name }}</a>
             <p class="text-sm text-gray-600">{{ $connection->headline ?? 'Developer' }}</p>
             <p class="text-xs text-gray-500 mt-1">Connected {{ $connection->pivot?->created_at->diffForHumans() ?? 'recently' }}</p>
             </div>
@@ -165,7 +165,7 @@
              alt="{{ $suggestion->name }}" 
              class="w-14 h-14 rounded-full border-4 border-purple-100 shadow-sm">
             <div class="flex-1 min-w-0">
-            <h3 class="text-lg font-semibold text-gray-900">{{ $suggestion->name }}</h3>
+            <a href="/profile/{{ $suggestion -> id }}" class="text-lg font-semibold text-gray-900">{{ $suggestion->name }}</a>
             <p class="text-sm text-gray-600">{{ $suggestion->headline ?? 'Developer' }}</p>
             @if ($suggestion->status == 'pending')
             <button class="mt-3 w-full px-4 py-2.5 bg-gray-100 text-gray-600 rounded-xl transition-all duration-300 font-medium">

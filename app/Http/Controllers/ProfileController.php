@@ -72,4 +72,25 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+    // show user profile
+    public function showUserProfile(User $user): View
+    {
+        $users = User::all();
+        $connectedUser = Auth::user();
+        $pandingRequests = $connectedUser->pendingRequests;
+        $friends = $connectedUser->friendships;
+
+        $followers = $connectedUser->followers;
+        $following = $connectedUser->following;
+        $connections = $followers->concat($following);
+        // usrs they are not following and not followed by they they status are not panding
+
+        $otherusers = $users -> whereNotIn('id', $connections->pluck('id'))->where('id', '!=', $connectedUser->id);
+
+        return view('profile', [
+            'user' => $user,
+            'connections' => $connections,
+            'pandingRequests' => $pandingRequests,
+        ]);
+    }
 }
