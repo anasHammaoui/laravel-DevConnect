@@ -161,7 +161,7 @@
             @foreach ($otherusers as $suggestion)
             <div class="p-6 hover:bg-gray-50 transition-all duration-300">
             <div class="flex items-center space-x-4">
-            <img src="{{ Storage::url($suggestion->image) ?? 'https://ui-avatars.com/api/?name=' . urlencode($suggestion->name) }}" 
+            <img src="{{ $suggestion->image ? Storage::url( $suggestion->image) : 'https://avatar.iran.liara.run/public/1' }}" 
              alt="{{ $suggestion->name }}" 
              class="w-14 h-14 rounded-full border-4 border-purple-100 shadow-sm">
             <div class="flex-1 min-w-0">

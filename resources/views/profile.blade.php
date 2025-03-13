@@ -36,8 +36,8 @@
             <div class="section-card overflow-hidden">
                 <div class="relative mb-8">
                     <div class="h-40 sm:h-48 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 rounded-t-xl"></div>
-                    <img src="{{ Storage::url($user->image) }}" alt="{{ $user->name }}" 
-                         class="absolute -bottom-14 left-8 w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-white shadow-lg object-cover transition-transform hover:scale-105"/>
+                    <img src="{{ $user ->  image ? Storage::url( $user ->  image) : 'https://avatar.iran.liara.run/public/1' }}" 
+                    class="absolute -bottom-14 left-8 w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-white shadow-lg object-cover transition-transform hover:scale-105"/>
                 </div>
                 <div class="pt-10 sm:pt-14">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
