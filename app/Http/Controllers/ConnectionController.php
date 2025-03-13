@@ -46,18 +46,27 @@ class ConnectionController extends Controller
     }
 public function sendRequest(Request $request, User $user)
     {
+        // Check if a connection already exists in either direction
+        $connectionExists = Connection::where(function($query) use ($user) {
+            $query->where('sender_id', Auth::id())
+              ->where('receiver_id', $user->id);
+        })->orWhere(function($query) use ($user) {
+            $query->where('sender_id', $user->id)
+              ->where('receiver_id', Auth::id());
+        })->exists();
         
-        $connection = new Connection();
-        $connection->sender_id = Auth::id();
-        $connection->receiver_id = $user->id;
-        $connection->status = 'pending';
-        $connection->save();
-        if ($user-> user_id !== auth()->id()){
-            $user -> notify(new UserNotification('Friend request ',auth()->user()->name));
+        // Only create a new connection if one doesn't exist
+        if (!$connectionExists) {
+            $connection = new Connection();
+            $connection->sender_id = Auth::id();
+            $connection->receiver_id = $user->id;
+            $connection->status = 'pending';
+            $connection->save();
+            if ($user-> user_id !== auth()->id()){
+                $user -> notify(new UserNotification('Friend request ',auth()->user()->name));
+            }
         }
         return back();
-        // echo 'hello';
-
 
     }
 
