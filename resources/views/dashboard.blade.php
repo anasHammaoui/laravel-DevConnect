@@ -187,7 +187,7 @@
                     <div class="p-4">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-3">
-                                <img src="{{ auth()->user()->image ? Storage::url(auth()->user()->image) : 'https://avatar.iran.liara.run/public/1' }}" alt="User" class="w-12 h-12 rounded-full"/>
+                                <img src="{{ $post -> user -> image ? Storage::url(auth()->user()->image) : 'https://avatar.iran.liara.run/public/1' }}" alt="User" class="w-12 h-12 rounded-full"/>
                                 <div>
                                     <a href="/profile/{{ $post -> user -> id }}" class="font-semibold">{{$post -> user -> name}}</a>
                                     <p class="text-gray-400 text-xs">{{ $post -> created_at -> diffForHumans() }}</p>
