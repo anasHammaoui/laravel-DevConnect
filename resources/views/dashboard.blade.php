@@ -319,7 +319,7 @@
                                 @if ($index < 4)
                                     <!-- Comment -->
                                     <div class="flex space-x-3">
-                                        <img src="{{Storage::url($comment -> user -> image)}}" alt="User" class="w-8 h-8 rounded-full mt-1"/>
+                                        <img src="{{ $comment -> user -> image ? Storage::url( $comment -> user -> image) : 'https://avatar.iran.liara.run/public/1' }}" alt="User" class="w-8 h-8 rounded-full mt-1"/>
                                         <div class="flex-1">
                                             <div class="bg-gray-50 p-3 rounded-lg">
                                                 <div class="flex justify-between items-center">
@@ -380,7 +380,7 @@
                     <!-- User 1 -->
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-3">
-                    <img src="{{ Storage::url($user -> image)}}" alt="{{ $user -> name }}" class="w-12 h-12 rounded-full object-cover border border-gray-200"/>
+                    <img src="{{$user -> image ? Storage::url( $user -> image) : 'https://avatar.iran.liara.run/public/1' }}" alt="{{ $user -> name }}" class="w-12 h-12 rounded-full object-cover border border-gray-200"/>
                     <div>
                         <a href="/profile/{{ $user -> id }}" class="font-medium">{{ $user -> name  }}</a>
                     </div>
@@ -391,9 +391,6 @@
            @endforeach
         </div>
         
-        <div class="p-4 border-t text-center">
-           {{ $allUsers -> links('pagination::tailwind') }}
-        </div>
     </div>
 </div>
         </div>
