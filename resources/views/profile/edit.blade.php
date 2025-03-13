@@ -58,7 +58,7 @@
             <div class="form-section mb-8">
                 <div class="flex flex-col md:flex-row items-start gap-6">
                     <div class="flex-shrink-0">
-                        <img src=" {{Storage::url($user->image)}} " 
+                        <img src="{{ auth()->user()->image ? Storage::url(auth()->user()->image) : 'https://avatar.iran.liara.run/public/1' }}" 
                              alt="Profile Image" 
                              class="w-32 h-32 rounded-full object-cover ring-4 ring-gray-100">
                     </div>
@@ -110,7 +110,7 @@
                 <div class="form-section">
                     <h3 class="text-xl font-semibold mb-6">Profile Image</h3>
                     <div class="flex items-center gap-6">
-                        <img id="profile-preview" src="{{Storage::url($user->image)}}" 
+                        <img id="profile-preview" src="{{ auth()->user()->image ? Storage::url(auth()->user()->image) : 'https://avatar.iran.liara.run/public/1' }}" 
                             alt="Profile Image" class="h-24 w-24 rounded-full object-cover ring-4 ring-gray-100">
                         <div class="flex-grow">
                             <label for="image" class="form-label">Update Profile Picture</label>

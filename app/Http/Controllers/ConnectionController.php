@@ -46,6 +46,7 @@ class ConnectionController extends Controller
     }
 public function sendRequest(Request $request, User $user)
     {
+        
         $connection = new Connection();
         $connection->sender_id = Auth::id();
         $connection->receiver_id = $user->id;

@@ -94,7 +94,7 @@
                     </div>
                     <div class="relative">
                         <div class="h-8 w-8 rounded-full overflow-hidden cursor-pointer" id="profile-menu-button">
-                            <img src="{{Storage::url(auth() -> user() -> image)}}" alt="Profile" class="w-full h-full object-cover"/>
+                            <img src="{{ auth()->user()->image ? Storage::url(auth()->user()->image) : 'https://avatar.iran.liara.run/public/1' }}" alt="Profile" class="w-full h-full object-cover"/>
                         </div>
                         
                         <!-- Dropdown Menu -->

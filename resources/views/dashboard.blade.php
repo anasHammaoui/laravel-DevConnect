@@ -37,7 +37,7 @@
                 <div class="bg-white rounded-xl shadow-sm overflow-hidden">
                     <div class="relative">
                         <div class="h-24 bg-gradient-to-r from-blue-600 to-blue-400"></div>
-                        <img src="{{ Storage::url(auth()-> user() -> image) }}" alt="Profile" 
+                        <img src="{{ auth()->user()->image ? Storage::url(auth()->user()->image) : 'https://avatar.iran.liara.run/public/1' }}" alt="Profile" 
                              class="absolute -bottom-6 left-4 w-20 h-20 rounded-full border-4 border-white shadow-md"/>
                     </div>
                     <div class="pt-14 p-4">
@@ -80,7 +80,7 @@
                 <!-- Post Creation -->
                 <div class="bg-white rounded-xl shadow-sm p-4">
                     <div class="flex items-center space-x-4">
-                        <img src="{{ Storage::url(auth()-> user() -> image) }}" alt="User" class="w-12 h-12 rounded-full"/>
+                        <img src="{{ auth()->user()->image ? Storage::url(auth()->user()->image) : 'https://avatar.iran.liara.run/public/1' }}" alt="User" class="w-12 h-12 rounded-full"/>
                         <button @click="showModal = true" class="bg-gray-100 hover:bg-gray-200 text-gray-500 text-left rounded-lg px-4 py-3 flex-grow transition-colors duration-200">
                             Share your knowledge or ask a question...
                         </button>
@@ -187,7 +187,7 @@
                     <div class="p-4">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-3">
-                                <img src="{{ Storage::url($post -> user -> image) }}" alt="User" class="w-12 h-12 rounded-full"/>
+                                <img src="{{ auth()->user()->image ? Storage::url(auth()->user()->image) : 'https://avatar.iran.liara.run/public/1' }}" alt="User" class="w-12 h-12 rounded-full"/>
                                 <div>
                                     <a href="/profile/{{ $post -> user -> id }}" class="font-semibold">{{$post -> user -> name}}</a>
                                     <p class="text-gray-400 text-xs">{{ $post -> created_at -> diffForHumans() }}</p>
@@ -345,7 +345,7 @@
                         
                         <!-- New Comment Input -->
                         <div class="flex space-x-3 mt-4">
-                            <img src="{{ Storage::url(Auth::user() -> image )}}" alt="User" class="w-8 h-8 rounded-full"/>
+                            <img src="{{ auth()->user()->image ? Storage::url(auth()->user()->image) : 'https://avatar.iran.liara.run/public/1' }}" alt="User" class="w-8 h-8 rounded-full"/>
                             <div class="flex-1">
                                 <form action="{{route('comments.store')}}" method="post">
                                     @csrf
@@ -383,7 +383,6 @@
                     <img src="{{ Storage::url($user -> image)}}" alt="{{ $user -> name }}" class="w-12 h-12 rounded-full object-cover border border-gray-200"/>
                     <div>
                         <a href="/profile/{{ $user -> id }}" class="font-medium">{{ $user -> name  }}</a>
-                        <p class="text-xs text-gray-500">{{ $user -> bio  }}</p>
                     </div>
                 </div>  
           
@@ -393,7 +392,7 @@
         </div>
         
         <div class="p-4 border-t text-center">
-           {{ $allUsers -> links() }}
+           {{ $allUsers -> links('pagination::tailwind') }}
         </div>
     </div>
 </div>
