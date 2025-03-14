@@ -32,7 +32,7 @@ class PostController extends Controller
         ->orderBy('likes_count', 'desc')
         ->paginate(5);
     }
-        $allUsers = User::all();
+        $allUsers = User::orderBy('id','desc')-> take(8) -> get();
         // $shareButtons = \Share::page(
         //     url('/post'),
         //     'here is the title'
