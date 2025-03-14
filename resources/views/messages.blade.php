@@ -70,7 +70,7 @@
             <div class="p-4 border-b border-gray-200 flex items-center justify-between">
                 <div class="flex items-center space-x-3">
                     <div class="relative">
-                        <img src="{{ Storage::url($talkedTo -> image) }}" alt="User" class="w-10 h-10 rounded-full">
+                        <img src="{{ $talkedTo->image ? Storage::url( $talkedTo->image) : 'https://avatar.iran.liara.run/public/1' }}" alt="User" class="w-10 h-10 rounded-full">
                     </div>
                     <div>
                         <a href="/profile/{{ $talkedTo -> id }}" class="font-medium text-gray-900">{{ $talkedTo -> name }}</a>
@@ -90,7 +90,7 @@
                    <div class="flex-shrink-0 mr-3">
                      @if ($message -> sender_id != auth()->id())
                          
-                     <img src="{{ Storage::url($talkedTo -> image) }}" alt="{{ $talkedTo -> name }}" class="w-8 h-8 rounded-full">
+                     <img src="{{ $talkedTo->image ? Storage::url( $talkedTo->image) : 'https://avatar.iran.liara.run/public/1' }}" class="w-8 h-8 rounded-full">
                       
                      @endif
                    </div>
@@ -200,7 +200,7 @@ channel.bind("Illuminate\\Notifications\\Events\\BroadcastNotificationCreated", 
                         <div class="flex items-end ">
                             @if(isset($talkedTo))
                             <div class="flex-shrink-0 mr-3">
-                             <img src="{{ Storage::url($talkedTo -> image) }}" alt="{{ $talkedTo -> name }}" class="w-8 h-8 rounded-full">
+                             <img src="{{ $talkedTo->image ? Storage::url( $talkedTo->image) : 'https://avatar.iran.liara.run/public/1' }}" alt="{{ $talkedTo -> name }}" class="w-8 h-8 rounded-full">
                              </div>
                             @endif
                             <div class="flex flex-col space-y-1 max-w-xs">

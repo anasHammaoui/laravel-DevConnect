@@ -95,7 +95,7 @@
             <div class="p-6 hover:bg-gray-50 transition-all duration-300">
             <!-- Keep existing content for each pending request -->
             <div class="flex items-center space-x-4">
-            <img src="{{ Storage::url($request->sender->image) ?? 'https://ui-avatars.com/api/?name=' . urlencode($request->sender->name) }}" 
+            <img src="{{ $request -> sender -> image ? Storage::url( $request -> sender -> image ) : 'https://avatar.iran.liara.run/public/1' }}" 
              alt="{{ $request->sender->name }}" 
              class="w-14 h-14 rounded-full border-4 border-blue-100 shadow-sm">
             <div class="flex-1 min-w-0">
@@ -129,7 +129,7 @@
             @foreach ($connections as $connection)
             <div class="p-6 hover:bg-gray-50 transition-all duration-300">
             <div class="flex items-center space-x-4">
-            <img src="{{ Storage::url($connection->image) ?? 'https://ui-avatars.com/api/?name=' . urlencode($connection->name) }}" 
+            <img src="{{ $connection->image ? Storage::url( $connection->image) : 'https://avatar.iran.liara.run/public/1' }}" 
              alt="{{ $connection->name }}" 
              class="w-14 h-14 rounded-full border-4 border-green-100 shadow-sm">
             <div class="flex-1 min-w-0">
