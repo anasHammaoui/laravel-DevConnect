@@ -45,7 +45,7 @@
                     <a href="{{ route('message.user', $connection->id) }}" class="block">
                         <div class="flex items-center space-x-3">
                             <div class="relative">
-                                <img src="{{ Storage::url($connection->image) }}" alt="{{ $connection->name }}" class="w-10 h-10 rounded-full">
+                                <img src="{{ $connection->image ? Storage::url( $connection->image) : 'https://avatar.iran.liara.run/public/1' }}" alt="{{ $connection->name }}" class="w-10 h-10 rounded-full">
                             </div>
                             <div class="flex-1 min-w-0">
                                 <div class="flex justify-between">
